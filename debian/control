@@ -1,0 +1,26 @@
+Source: magread
+Section: user/utilities
+Priority: extra
+Maintainer: Jeffrey Malone <ieatlint@tehinterweb.com>
+Build-Depends: debhelper (>= 5), libqt4-dev (>=4.6.1), libpulse-dev
+Standards-Version: 3.7.3
+
+Package: magread
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libqt4-core (>= 4.6.1),
+	 libqt4-gui (>= 4.6.1), libqt4-maemo5 (>= 4.6.1),
+	 libpulse0
+Description: Reads magnetic stripe cards
+ Using a hardware audio dongle, MagRead can read most magnetic stripe cards.
+ For credit cards, and ID cards issued in North America, it will also parse the
+ data and display it in a familiar format.
+ *Requires that you have a hardware dongle, such as those provided by Square.*
+ See http://blog.tehinterweb.com/ for more details
+XB-Maemo-Icon-26:
+ iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c
+ 6QAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0
+ SU1FB9oLBQozCb9fDIgAAACJSURBVGje7dk7DgIxEINhD+FeuRryxU2xLKKG
+ yuxvKf18SpTHZJKoOTeVBwAAAAAA/JYkSiLbkVQxbOes+118W05EZfGfiDlW
+ Ued9aGbYhQAAAAAAAAAAAAAAuDBgXu9MZgAAAAAAvspdOrpzlWfAjJbtx967
+ ErDW+oPeaHt3evgnBgAAAIBLA56qTbfaUaUizgAAAABJRU5ErkJggg==
+
