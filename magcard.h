@@ -56,6 +56,7 @@ class MagCard {
 		QString aamvaIssuerName;
 		QString aamvaIssuerAbr;
 		QDate aamvaBirthday;
+		int aamvaAge;
 
 		MagCard() {
 			encoding = UNSET;

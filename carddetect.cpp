@@ -195,6 +195,12 @@ void CardDetect::aamvaCardCheck( QString expDate ) {
 	}
 	card->aamvaBirthday = QDate::fromString( bday, "yyyyMMdd" );
 
+	//set the age
+	/* FIXME a leap year can offset this by a day ... */
+	card->aamvaAge = QDate::currentDate().year() - card->aamvaBirthday.year();
+	if( card->aamvaBirthday.dayOfYear() > QDate::currentDate().dayOfYear() )
+		card->aamvaAge--;
+
 	//set the expiration date
 	if( expDate.endsWith( "99" ) ) { // expires on the birth day and month in the given year
 		expDate.replace( 2, 4, bday.mid( 4, 4 ) );

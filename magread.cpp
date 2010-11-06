@@ -191,17 +191,11 @@ void MagRead::aamvaPage() {
 	/* Calculate the age */
 	QDate curDate = QDate::currentDate();
 
-	/* FIXME a leap year can offset this by a day ... */
-	int age = QDate::currentDate().year() - card.aamvaBirthday.year();
-	if( card.aamvaBirthday.dayOfYear() > QDate::currentDate().dayOfYear() ) {
-		age--;
-	}
-
-	QString ageStr = QString ( "<span style=\"font-size:32pt;\">Age %1 </span>" ).arg( age );
-	if( age < 18 ) {
+	QString ageStr = QString ( "<span style=\"font-size:32pt;\">Age %1 </span>" ).arg( card.aamvaAge );
+	if( card.aamvaAge < 18 ) {
 		ageStr.prepend( "<font color=\"red\">" );
 		ageStr.append( "</font>" );
-	} else if( age < 21 ) {
+	} else if( card.aamvaAge < 21 ) {
 		ageStr.prepend( "<font color=\"yellow\">" );
 		ageStr.append( "</font>" );
 	}
