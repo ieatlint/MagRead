@@ -33,11 +33,13 @@ extern "C" {
 #define MAX_BITSTREAM_LEN 1024
 
 #define ABA_SS		"11010"
+#define ABA_ES		"11111"
 #define MAX_ABA_LEN	41
 #define ABA_CHAR_LEN	5
 #define ABA_ASCII_OFFSET 48
 
 #define IATA_SS		"1010001"
+#define IATA_ES		"1111100"
 #define MAX_IATA_LEN	83 // some reports say max len is 79, but AAMVA says 82 ...
 #define IATA_CHAR_LEN	7
 #define IATA_ASCII_OFFSET 32
