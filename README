@@ -1,14 +1,12 @@
-MagRead is an application for the Nokia N900 phone to read magnetic stripe
-cards.
+MagRead is an application to read magnetic stripe cards.
 
 Requirements:
  - A hardware audio dongle to read the cards, such as those provided by Square
    for their payment service.
  - Qt 4.6 or later (including Qt Multimedia plugin)
- - Pulseaudio (default on Maemo)
 
 It may run on any device meeting the above requirements, but has only been
-tested on the N900 using Maemo5 PR1.2 and PR1.3.
+tested on a Linux desktop machine and a Nokia N8.
 
 To build on the terminal, simply run:
 qmake && make
