@@ -27,17 +27,21 @@ MagRead::MagRead(QWidget *parent) : QMainWindow(parent) {
 	captureAudio = false;
 	partialRead = false;
 
+	audioFormat.setFrequency( 48000 );
+	audioFormat.setChannels( 1 );
+	audioFormat.setSampleSize( 16 );
+	audioFormat.setCodec( "audio/pcm" );
+	audioFormat.setByteOrder( QAudioFormat::LittleEndian );
+	audioFormat.setSampleType( QAudioFormat::SignedInt );
+
+	magDec = NULL;
+
 	qRegisterMetaType<MagCard>( "MagCard" );
 
-	connect( &audioInput, SIGNAL( cardRead( const MagCard& ) ), this, SLOT( cardRead( const MagCard& ) ) );
-	connect( &audioInput, SIGNAL( error( const QString& ) ), this, SLOT( audioInputError( const QString& ) ) );
 }
 
-void MagRead::maemoNotice( QString msg, int msec ) {
-	QMaemo5InformationBox infoBox;
-
-	infoBox.information( 0, msg, msec );
-	infoBox.show();
+void MagRead::notice( QString msg ) {
+	qDebug() << "NOTICE" << msg;
 }
 
 void MagRead::cardRead( const MagCard _card ) {
@@ -51,16 +55,11 @@ void MagRead::cardRead( const MagCard _card ) {
 	} else if( card.swipeValid ) {
 		miscPage();
 	} else if( partialRead ) {
-		maemoNotice( "Show data from a partial read; may be incomplete/invalid!", 1000 );
+		notice( "Show data from a partial read; may be incomplete/invalid" );
 		miscPage( true );
 	} else {
-		maemoNotice( "Swipe Failed! Please Retry", 1000 );
+		notice( "Swipe Failed! Please Retry" );
 	}
-}
-
-void MagRead::audioInputError( const QString msg ) {
-	maemoNotice( msg, 5000 );
-	captureAudio = false;
 }
 
 /* Main Page */
@@ -71,7 +70,7 @@ void MagRead::mainPage() {
 	widget->setLayout( layout );
 
 	QLabel *label;
-	label = new QLabel( "<span style=\"font-size:48pt;\">MagRead</span>" );
+	label = new QLabel( "<span style=\"font-size:18pt;\">MagRead</span>" );
 	layout->addWidget( label, 1, Qt::AlignHCenter );
 
 	QCheckBox *cbox = new QCheckBox( "Show Partial Data" );
@@ -91,14 +90,14 @@ void MagRead::toggleRead() {
 	QPushButton *button = qobject_cast<QPushButton *>( QObject::sender() );
 
 	if( captureAudio ) {
-		audioInput.stop();
+		captureStop();
 		if( onMainPage )
 			button->setText( "Start" );
 		else
 			button->setText( "Back to Main Page" );
 		captureAudio = false;
 	} else if( onMainPage ) {
-		audioInput.start();
+		captureStart();
 		button->setText( "Stop" );
 		captureAudio = true;
 	} else {
@@ -107,71 +106,53 @@ void MagRead::toggleRead() {
 
 }
 
+void MagRead::captureStart() {
+	magDec = new MagDecode( this );
+	connect( magDec, SIGNAL( cardRead( MagCard ) ), this, SLOT( cardRead( MagCard ) ) );
+	connect( magDec, SIGNAL( errorMsg( QString ) ), this, SLOT( notice( QString ) ) );
+
+	audioInput = new QAudioInput( audioFormat, this );
+	magDec->start();
+	audioInput->start( magDec );
+}
+
+void MagRead::captureStop() {
+	if( !magDec )
+		return;
+
+	audioInput->stop();
+	magDec->stop();
+	delete audioInput;
+	delete magDec;
+	magDec = NULL;
+	
+}
+
 void MagRead::togglePartialRead( bool _partialRead ) {
 	partialRead = _partialRead;
 }
 
 /* Credit Page */
 void MagRead::creditPage() {
-	maemoNotice( "Successfully Read Credit Card", 1000 );
+	notice( "Successfully Read Credit Card" );
 	QWidget *widget = new QWidget;
-	QGridLayout *layout = new QGridLayout( widget );
+	QVBoxLayout *layout = new QVBoxLayout( widget );
 
 	onMainPage = false;
 
-	widget->setLayout( layout );
+	AccountCard *accountCard = new AccountCard( &card );
 
-	QLabel *label;
-
-	QString accountNumber = card.accountNumber;
-	if( card.type == MagCard::CARD_AMEX ) {
-		accountNumber.insert( 10, '\t' );
-		accountNumber.insert( 4, '\t' );
-	} else {
-		accountNumber.insert( 12, '\t' );
-		accountNumber.insert( 8, '\t' );
-		accountNumber.insert( 4, '\t' );
-	}
-
-	accountNumber.prepend( "<span style=\"font-size:48pt;\"><br>\n" );
-	accountNumber.append( "</span>" );
-	
-	if( !card.accountHolder.isEmpty() ) {
-		accountNumber.append( "\n<span style=\"font-size:36pt;\"><div align=center>" );
-		accountNumber.append( card.accountHolder );
-		accountNumber.append( "</div></span>" );
-	}
-
-	label = new QLabel( accountNumber );
-	layout->addWidget( label, 0, 0, 1, 2, Qt::AlignHCenter );
-
-	label = new QLabel( "<span style=\"font-size:24pt;\">Expiration Date</span>" );
-	layout->addWidget( label, 1, 0, 1, 1, Qt::AlignHCenter | Qt::AlignBottom );
-
-	label = new QLabel( "<span style=\"font-size:24pt;\">Issuer</span>" );
-	layout->addWidget( label, 1, 1, 1, 1, Qt::AlignHCenter | Qt::AlignBottom );
-
-	QString expDate = card.expirationDate.toString( "MM/yy" );
-	if( card.expirationDate < QDate::currentDate() ) {
-		expDate.prepend( "<font color=\"red\">" );
-		expDate.append( "</font>" );
-	}
-
-	label = new QLabel( QString( "<span style=\"font-size:32pt;\">%1</span>" ).arg( expDate ) );
-	layout->addWidget( label, 2, 0, 1, 1, Qt::AlignHCenter | Qt::AlignTop );
-
-	label = new QLabel( QString( "<span style=\"font-size:32pt;\">%1</span>" ).arg( card.accountIssuer ) );
-	layout->addWidget( label, 2, 1, 1, 1, Qt::AlignHCenter | Qt::AlignTop );
+	layout->addWidget( accountCard, 1 );
 
 	QPushButton *button = new QPushButton( "Stop" );
-	layout->addWidget( button, 3, 0, 1, 2 );
+	layout->addWidget( button, 0 );
 	connect( button, SIGNAL( clicked() ), this, SLOT( toggleRead() ) );
 
 	setCentralWidget( widget );
 }
 
 void MagRead::aamvaPage() {
-	maemoNotice( "Successfully Read AAMVA Card", 1000 );
+	notice( "Successfully Read AAMVA Card" );
 	QWidget *widget = new QWidget;
 	QGridLayout *layout = new QGridLayout( widget );
 
@@ -181,17 +162,17 @@ void MagRead::aamvaPage() {
 
 	QLabel *label;
 
-	label = new QLabel( "<span style=\"font-size:36pt;\">" + card.aamvaIssuerName + "</span>" );
+	label = new QLabel( "<span style=\"font-size:16pt;\">" + card.aamvaIssuerName + "</span>" );
 	layout->addWidget( label, 0, 0, 1, 2, Qt::AlignHCenter );
 
-	label = new QLabel( "<span style=\"font-size:32pt;\">" + card.accountNumber + "</span>" );
+	label = new QLabel( "<span style=\"font-size:16pt;\">" + card.accountNumber + "</span>" );
 	layout->addWidget( label, 1, 0, 1 ,2, Qt::AlignHCenter | Qt::AlignTop );
 	layout->setRowStretch( 1, 1 );
 
 	/* Calculate the age */
 	QDate curDate = QDate::currentDate();
 
-	QString ageStr = QString ( "<span style=\"font-size:32pt;\">Age %1 </span>" ).arg( card.aamvaAge );
+	QString ageStr = QString ( "<span style=\"font-size:16pt;\">Age %1 </span>" ).arg( card.aamvaAge );
 	if( card.aamvaAge < 18 ) {
 		ageStr.prepend( "<font color=\"red\">" );
 		ageStr.append( "</font>" );
@@ -203,14 +184,14 @@ void MagRead::aamvaPage() {
 	label = new QLabel( ageStr );
 	layout->addWidget( label, 2, 0, 1, 2, Qt::AlignHCenter );
 
-	label = new QLabel( "<span style=\"font-size:24pt;\">Expiration Date</font>" );
+	label = new QLabel( "<span style=\"font-size:12pt;\">Expiration Date</font>" );
 	layout->addWidget( label, 3, 0, 1, 1, Qt::AlignHCenter );
 
-	label = new QLabel( "<span style=\"font-size:24pt;\">Date of Birth</span>" );
+	label = new QLabel( "<span style=\"font-size:12pt;\">Date of Birth</span>" );
 	layout->addWidget( label, 3, 1, 1, 1, Qt::AlignHCenter );
 
 	QString expDate = card.expirationDate.toString( "MM/dd/yy" );
-	expDate.prepend( "<span style=\"font-size:24pt;\">" );
+	expDate.prepend( "<span style=\"font-size:12pt;\">" );
 	if( card.expirationDate < QDate::currentDate() ) {
 		expDate.prepend( "<font color=\"red\"><div align=\"center\">" );
 		expDate.append( "<br>\nEXPIRED</font></div>" );
@@ -220,7 +201,7 @@ void MagRead::aamvaPage() {
 	layout->addWidget( label, 4, 0, 1, 1, Qt::AlignHCenter );
 
 
-	label = new QLabel(  "<span style=\"font-size:24pt;\">" + card.aamvaBirthday.toString( "MM/dd/yy" ) + "</span>" );
+	label = new QLabel(  "<span style=\"font-size:12pt;\">" + card.aamvaBirthday.toString( "MM/dd/yy" ) + "</span>" );
 	layout->addWidget( label, 4, 1, 1, 1, Qt::AlignHCenter );
 
 	QPushButton *button = new QPushButton( "Stop" );
@@ -233,7 +214,7 @@ void MagRead::aamvaPage() {
 /* Misc Page */
 void MagRead::miscPage( bool partial ) {
 	if( !partial )
-		maemoNotice( "Successfully Read an Unknown Card", 1000 );
+		notice( "Successfully Read an Unknown Card" );
 	
 	QWidget *widget = new QWidget;
 	QGridLayout *layout = new QGridLayout( widget );
@@ -252,7 +233,7 @@ void MagRead::miscPage( bool partial ) {
 	}
 	tmpStr.replace( '|', "<font color=\"red\">|</font>" );
 
-	tmpStr.prepend( "<span style=\"font-size:36pt;\"><div align=\"center\">" );
+	tmpStr.prepend( "<span style=\"font-size:18pt;\"><div align=\"center\">" );
 	tmpStr.append( "</div></span>" );
 
 	QLabel *label = new QLabel( tmpStr );

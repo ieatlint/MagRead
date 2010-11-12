@@ -30,12 +30,13 @@
 #include <QScrollArea>
 
 #include <QMetaType>
-
-#include <QMaemo5InformationBox>
+#include <QAudioInput>
 
 #include "carddetect.h"
-#include "audioinput.h"
 #include "magcard.h"
+#include "magdecode.h"
+
+#include "accountcard.h"
 
 
 class MagRead : public QMainWindow {
@@ -47,7 +48,9 @@ class MagRead : public QMainWindow {
 	private:
 		MagCard card;
 		CardDetect cardDetect;
-		AudioInput audioInput;
+		QAudioFormat audioFormat;
+		QAudioInput *audioInput;
+		MagDecode *magDec;
 		bool captureAudio;
 		bool partialRead;
 		bool onMainPage;
@@ -57,10 +60,12 @@ class MagRead : public QMainWindow {
 		void aamvaPage();
 		void miscPage( bool partial = false );
 
+		void captureStart();
+		void captureStop();
+
 	private slots:
 		void cardRead( const MagCard _card );
-		void maemoNotice( QString msg, int msec );
-		void audioInputError( const QString msg );
+		void notice( QString msg );
 		void toggleRead();
 		void togglePartialRead( bool _partialRead );
 };
