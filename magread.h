@@ -28,6 +28,7 @@
 #include <QDate>
 #include <QCheckBox>
 #include <QScrollArea>
+#include <QAction>
 
 #include <QMetaType>
 #include <QAudioInput>

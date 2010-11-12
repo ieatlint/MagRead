@@ -198,15 +198,9 @@ void MagRead::aamvaPage() {
 
 /* Misc Page */
 void MagRead::miscPage( bool partial ) {
-	if( !partial )
-		notice( "Successfully Read an Unknown Card" );
-	
-	QWidget *widget = new QWidget;
-	QGridLayout *layout = new QGridLayout( widget );
+	notice( "Misc Card Page" );
 
 	onMainPage = false;
-
-	widget->setLayout( layout );
 
 	QScrollArea *scroll = new QScrollArea;
 
@@ -224,18 +218,18 @@ void MagRead::miscPage( bool partial ) {
 	QLabel *label = new QLabel( tmpStr );
 	scroll->setWidget( label );
 	scroll->setWidgetResizable( true );
-	layout->addWidget( scroll, 0, 0, 1, 2, Qt::AlignHCenter );
 
 	label->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
 
-/*
 #ifdef Q_OS_SYMBIAN
-	setCentralWidget( aamvaCard );
+	setCentralWidget( scroll );
 #else
-	if( mainLayout->count() > 1 )
+	if( mainLayout->count() > 1 ) {
+		mainLayout->itemAt( 0 )->widget()->hide();
 		mainLayout->removeItem( mainLayout->itemAt( 0 ) );
-	mainLayout->insertWidget( 0, aamvaCard, 1 );
+	}
+	mainLayout->insertWidget( 0, scroll, 1 );
 #endif
-*/
+
 }
 
