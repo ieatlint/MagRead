@@ -15,7 +15,8 @@ SOURCES += main.cpp\
     magdecode.cpp \
     mslib.c \
     llist.c \
-    accountcard.cpp
+    accountcard.cpp \
+    aamvacard.cpp
 
 HEADERS  += magread.h \
     carddetect.h \
@@ -23,7 +24,8 @@ HEADERS  += magread.h \
     mslib.h \
     llist.h \
     magcard.h \
-    accountcard.h
+    accountcard.h \
+    aamvacard.h
 
 symbian {
     TARGET.UID3 = 0xe2c961e1

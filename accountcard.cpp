@@ -32,6 +32,7 @@ AccountCard::AccountCard( MagCard *_card ) {
 	layout.addLayout( &vFlexBox );
 
 	//Setup the auto-reorientation
+	orientation = PORTRAIT;
 	reorient();
 	installEventFilter( this );
 	
