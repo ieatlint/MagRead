@@ -37,6 +37,7 @@
 #include "magdecode.h"
 
 #include "accountcard.h"
+#include "aamvacard.h"
 
 
 class MagRead : public QMainWindow {
@@ -62,6 +63,14 @@ class MagRead : public QMainWindow {
 
 		void captureStart();
 		void captureStop();
+
+#ifdef Q_OS_SYMBIAN
+		QAction *backSoftKey;
+#else
+		QWidget *mainWidget;
+		QVBoxLayout *mainLayout;
+		QPushButton *mainBackBtn;
+#endif
 
 	private slots:
 		void cardRead( const MagCard _card );

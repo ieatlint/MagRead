@@ -22,7 +22,7 @@
 #include <QDebug>
 
 MagRead::MagRead(QWidget *parent) : QMainWindow(parent) {
-	mainPage();
+	qDebug() << "reach";
 
 	captureAudio = false;
 	partialRead = false;
@@ -38,6 +38,23 @@ MagRead::MagRead(QWidget *parent) : QMainWindow(parent) {
 
 	qRegisterMetaType<MagCard>( "MagCard" );
 
+#ifdef Q_OS_SYMBIAN
+	backSoftKey = new QAction( "Start", this );
+	backSoftKey->setSoftKeyRole( QAction::PositiveSoftKey );
+	connect( backSoftKey, SIGNAL( triggered() ), this, SLOT( toggleRead() ) );
+	addAction( backSoftKey );
+#else
+	mainWidget = new QWidget;
+	mainLayout = new QVBoxLayout( mainWidget );
+	mainWidget->setLayout( mainLayout );
+
+	mainBackBtn = new QPushButton( "Start" );
+	mainLayout->addWidget( mainBackBtn, 0 );
+	connect( mainBackBtn, SIGNAL( clicked() ), this, SLOT( toggleRead() ) );
+
+	setCentralWidget( mainWidget );
+#endif
+	mainPage();
 }
 
 void MagRead::notice( QString msg ) {
@@ -77,33 +94,43 @@ void MagRead::mainPage() {
 	layout->addWidget( cbox );
 	connect( cbox, SIGNAL( toggled( bool ) ), this, SLOT( togglePartialRead( bool ) ) );
 
-	QPushButton *button = new QPushButton( "Start" );
-	layout->addWidget( button );
-	connect( button, SIGNAL( clicked() ), this, SLOT( toggleRead() ) );
-
 	onMainPage = true;
 
+#ifdef Q_OS_SYMBIAN
 	setCentralWidget( widget );
+#else
+	if( mainLayout->count() > 1 ) {
+		mainLayout->itemAt( 0 )->widget()->hide();
+		mainLayout->removeItem( mainLayout->itemAt( 0 ) );
+	}
+	mainLayout->insertWidget( 0, widget, 1 );
+#endif
 }
 
 void MagRead::toggleRead() {
-	QPushButton *button = qobject_cast<QPushButton *>( QObject::sender() );
+	QString backStr;
 
 	if( captureAudio ) {
 		captureStop();
 		if( onMainPage )
-			button->setText( "Start" );
+			backStr = "Start";
 		else
-			button->setText( "Back to Main Page" );
+			backStr = "Back";
 		captureAudio = false;
 	} else if( onMainPage ) {
 		captureStart();
-		button->setText( "Stop" );
+		backStr = "Stop";
 		captureAudio = true;
 	} else {
+		backStr = "Start";
 		mainPage();
 	}
 
+#ifdef Q_OS_SYMBIAN
+			backSoftKey->setText( backStr );
+#else
+			mainBackBtn->setText( backStr );
+#endif
 }
 
 void MagRead::captureStart() {
@@ -135,80 +162,38 @@ void MagRead::togglePartialRead( bool _partialRead ) {
 /* Credit Page */
 void MagRead::creditPage() {
 	notice( "Successfully Read Credit Card" );
-	QWidget *widget = new QWidget;
-	QVBoxLayout *layout = new QVBoxLayout( widget );
 
 	onMainPage = false;
 
 	AccountCard *accountCard = new AccountCard( &card );
 
-	layout->addWidget( accountCard, 1 );
-
-	QPushButton *button = new QPushButton( "Stop" );
-	layout->addWidget( button, 0 );
-	connect( button, SIGNAL( clicked() ), this, SLOT( toggleRead() ) );
-
-	setCentralWidget( widget );
+#ifdef Q_OS_SYMBIAN
+	setCentralWidget( accountCard );
+#else
+	if( mainLayout->count() > 1 ) {
+		mainLayout->itemAt( 0 )->widget()->hide();
+		mainLayout->removeItem( mainLayout->itemAt( 0 ) );
+	}
+	mainLayout->insertWidget( 0, accountCard, 1 );
+#endif
 }
 
 void MagRead::aamvaPage() {
 	notice( "Successfully Read AAMVA Card" );
-	QWidget *widget = new QWidget;
-	QGridLayout *layout = new QGridLayout( widget );
 
 	onMainPage = false;
 
-	widget->setLayout( layout );
+	AAMVACard *aamvaCard = new AAMVACard( &card );
 
-	QLabel *label;
-
-	label = new QLabel( "<span style=\"font-size:16pt;\">" + card.aamvaIssuerName + "</span>" );
-	layout->addWidget( label, 0, 0, 1, 2, Qt::AlignHCenter );
-
-	label = new QLabel( "<span style=\"font-size:16pt;\">" + card.accountNumber + "</span>" );
-	layout->addWidget( label, 1, 0, 1 ,2, Qt::AlignHCenter | Qt::AlignTop );
-	layout->setRowStretch( 1, 1 );
-
-	/* Calculate the age */
-	QDate curDate = QDate::currentDate();
-
-	QString ageStr = QString ( "<span style=\"font-size:16pt;\">Age %1 </span>" ).arg( card.aamvaAge );
-	if( card.aamvaAge < 18 ) {
-		ageStr.prepend( "<font color=\"red\">" );
-		ageStr.append( "</font>" );
-	} else if( card.aamvaAge < 21 ) {
-		ageStr.prepend( "<font color=\"yellow\">" );
-		ageStr.append( "</font>" );
+#ifdef Q_OS_SYMBIAN
+	setCentralWidget( aamvaCard );
+#else
+	if( mainLayout->count() > 1 ) {
+		mainLayout->itemAt( 0 )->widget()->hide();
+		mainLayout->removeItem( mainLayout->itemAt( 0 ) );
 	}
-
-	label = new QLabel( ageStr );
-	layout->addWidget( label, 2, 0, 1, 2, Qt::AlignHCenter );
-
-	label = new QLabel( "<span style=\"font-size:12pt;\">Expiration Date</font>" );
-	layout->addWidget( label, 3, 0, 1, 1, Qt::AlignHCenter );
-
-	label = new QLabel( "<span style=\"font-size:12pt;\">Date of Birth</span>" );
-	layout->addWidget( label, 3, 1, 1, 1, Qt::AlignHCenter );
-
-	QString expDate = card.expirationDate.toString( "MM/dd/yy" );
-	expDate.prepend( "<span style=\"font-size:12pt;\">" );
-	if( card.expirationDate < QDate::currentDate() ) {
-		expDate.prepend( "<font color=\"red\"><div align=\"center\">" );
-		expDate.append( "<br>\nEXPIRED</font></div>" );
-	}
-	expDate.append( "</span>" );
-	label = new QLabel( expDate );
-	layout->addWidget( label, 4, 0, 1, 1, Qt::AlignHCenter );
-
-
-	label = new QLabel(  "<span style=\"font-size:12pt;\">" + card.aamvaBirthday.toString( "MM/dd/yy" ) + "</span>" );
-	layout->addWidget( label, 4, 1, 1, 1, Qt::AlignHCenter );
-
-	QPushButton *button = new QPushButton( "Stop" );
-	layout->addWidget( button, 5, 0, 1, 2 );
-	connect( button, SIGNAL( clicked() ), this, SLOT( toggleRead() ) );
-
-	setCentralWidget( widget );
+	mainLayout->insertWidget( 0, aamvaCard, 1 );
+#endif
 }
 
 /* Misc Page */
@@ -243,10 +228,14 @@ void MagRead::miscPage( bool partial ) {
 
 	label->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
 
-	QPushButton *button = new QPushButton( "Stop" );
-	layout->addWidget( button, 1, 0, 1, 2 );
-	connect( button, SIGNAL( clicked() ), this, SLOT( toggleRead() ) );
-
-	setCentralWidget( widget );
+/*
+#ifdef Q_OS_SYMBIAN
+	setCentralWidget( aamvaCard );
+#else
+	if( mainLayout->count() > 1 )
+		mainLayout->removeItem( mainLayout->itemAt( 0 ) );
+	mainLayout->insertWidget( 0, aamvaCard, 1 );
+#endif
+*/
 }
 
