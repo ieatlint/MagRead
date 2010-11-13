@@ -31,14 +31,15 @@ class MagCard {
 		ms_dataType encoding;
 		bool swipeValid;
 		enum Type {
-			CARD_UNSET = 0, // 0000000
-			CARD_UNKNOWN = 1,//0000001
-			CARD_AAMVA = 2,	// 0000010
-			CARD_CC = 64,	// 1000000
-			CARD_AMEX = 68,	// 1000100
-			CARD_DISC = 72, // 1001000
-			CARD_MC = 80,	// 1010000
-			CARD_VISA = 96	// 1100000
+			CARD_UNSET = 0, // 00000000
+			CARD_UNKNOWN = 1,//00000001
+			CARD_AAMVA = 2,	// 00000010
+			CARD_AAA = 4,	// 00000100
+			CARD_CC = 128,	// 10000000
+			CARD_AMEX = 136,// 10001000
+			CARD_DISC = 144, // 10010000
+			CARD_MC = 160,	// 10100000
+			CARD_VISA = 192	// 11000000
 		};
 		Q_DECLARE_FLAGS( Types, Type );
 		Types type;

@@ -18,6 +18,7 @@
     http://blog.tehinterweb.com
 */
 #include "carddetect.h"
+#include <QDebug>
 
 CardDetect::CardDetect( MagCard *_card ) {
 	aamvaIssuerList();
@@ -96,6 +97,22 @@ void CardDetect::processCard() {
 			card->type = MagCard::CARD_UNKNOWN; // must contain a valid date to be known
 		}
 	}
+
+	//test if it is a AAA card
+	if( card->type == MagCard::CARD_VISA ) {
+		if( card->encoding == ABA && card->miscData.endsWith( "004976" ) ) {
+			card->type = MagCard::CARD_AAA;
+		} else if( card->encoding == IATA && card->miscData.contains( "00497600" ) ) { 
+			card->type = MagCard::CARD_AAA;
+			card->expirationDate.setDate( card->expirationDate.year(),
+							card->expirationDate.month(),
+							card->miscData.right( 4 ).left( 2 ).toInt() );
+		}
+
+		if( card->type == MagCard::CARD_AAA )
+			card->accountIssuer = "AAA";
+	}
+
 }
 
 void CardDetect::aamvaIssuerList() {

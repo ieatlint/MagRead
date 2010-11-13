@@ -65,7 +65,7 @@ void MagRead::cardRead( const MagCard _card ) {
 	card = _card;
 	cardDetect.setCard( &card );
 
-	if( card.type & MagCard::CARD_CC && card.accountValid ) {
+	if( ( card.type & MagCard::CARD_CC || card.type == MagCard::CARD_AAA ) && card.accountValid ) {
 		creditPage();
 	} else if( card.type == MagCard::CARD_AAMVA ) {
 		aamvaPage();
