@@ -46,6 +46,8 @@ class AAMVACard : public QWidget {
 		QVBoxLayout vboxaamvaBirthday;
 		QWidget vWidgetaamvaBirthday;
 
+		QFont smallFont;
+		QFont medFont;
 
 	protected:
 		bool eventFilter( QObject *obj, QEvent *event );

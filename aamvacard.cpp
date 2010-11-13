@@ -6,20 +6,30 @@ AAMVACard::AAMVACard( MagCard *_card ) {
 	QLabel *label;
 	setLayout( &layout );
 
+	smallFont.setPointSize( 12 );
+	medFont.setPointSize( 16 );
+
+	aamvaIssuerName.setFont( medFont );
 	layout.addWidget( &aamvaIssuerName, 1, Qt::AlignHCenter );
 
+	accountNumber.setFont( medFont );
 	layout.addWidget( &accountNumber, 1, Qt::AlignHCenter );
 
+	aamvaAge.setFont( smallFont );
 	layout.addWidget( &aamvaAge, 1, Qt::AlignHCenter );
 
-	label = new QLabel( "<span style=\"font-size:12pt;\">Expiration Date</span>" );
+	label = new QLabel( "Expiration Date" );
+	label->setFont( smallFont );
 	vboxExpirationDate.addWidget( label, 1, Qt::AlignHCenter );
+	expirationDate.setFont( smallFont );
 	vboxExpirationDate.addWidget( &expirationDate, 1, Qt::AlignHCenter );
 	vWidgetExpirationDate.setLayout( &vboxExpirationDate );
 
 
-	label = new QLabel( "<span style=\"font-size:12pt;\">Date of Birth</span>" );
+	label = new QLabel( "Date of Birth" );
+	label->setFont( smallFont );
 	vboxaamvaBirthday.addWidget( label, 1, Qt::AlignHCenter );
+	aamvaBirthday.setFont( smallFont );
 	vboxaamvaBirthday.addWidget( &aamvaBirthday, 1, Qt::AlignHCenter );
 	vWidgetaamvaBirthday.setLayout( &vboxaamvaBirthday );
 
@@ -83,13 +93,11 @@ void AAMVACard::setCard( MagCard *_card ) {
 void AAMVACard::showData() {
 	QString tmpStr;
 
-	tmpStr = QString( "<span style=\"font-size:16pt;\">%1</span>" ).arg( card->aamvaIssuerName );
-	aamvaIssuerName.setText( tmpStr );
+	aamvaIssuerName.setText( card->aamvaIssuerName );
 
-	tmpStr = QString( "<span style=\"font-size:16pt;\">%1</span>" ).arg( card->accountNumber );
-	accountNumber.setText( tmpStr );
+	accountNumber.setText( card->accountNumber );
 
-	tmpStr = QString ( "<span style=\"font-size:16pt;\">Age %1 </span>" ).arg( card->aamvaAge );
+	tmpStr = QString( "Age %1" ).arg( card->aamvaAge );
 	if( card->aamvaAge < 18 ) {
 		tmpStr.prepend( "<font color=\"red\">" );
 		tmpStr.append( "</font>" );
@@ -100,17 +108,11 @@ void AAMVACard::showData() {
 	aamvaAge.setText( tmpStr );
 
 	tmpStr = card->expirationDate.toString( "MMM dd, yyyy" );
-	tmpStr.prepend( "<span style=\"font-size:12pt;\">" );
-	tmpStr.append( "</span>" );
 	if( card->expirationDate < QDate::currentDate() ) {
 		tmpStr.prepend( "<font color=\"red\">" );
 		tmpStr.append( "</font>" );
 	}
 	expirationDate.setText( tmpStr );
 
-	tmpStr = card->aamvaBirthday.toString( "MMM dd, yyyy" );
-	tmpStr.prepend( "<span style=\"font-size:12pt;\">" );
-	tmpStr.append( "</span>" );
-	aamvaBirthday.setText( tmpStr );
-
+	aamvaBirthday.setText( card->aamvaBirthday.toString( "MMM dd, yyyy" ) );
 }
