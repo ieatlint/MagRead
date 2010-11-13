@@ -47,7 +47,9 @@ class AccountCard : public QWidget {
 		QVBoxLayout vboxAccountIssuer;
 		QLabel accountIssuer;
 
-		QWidget extra;
+		QFont smallFont;
+		QFont medFont;
+		QFont accountNumberFont;
 
 	protected:
 		bool eventFilter( QObject *obj, QEvent *event );

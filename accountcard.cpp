@@ -6,20 +6,27 @@ AccountCard::AccountCard( MagCard *_card ) {
 	QLabel *label;
 	setLayout( &layout );
 
-//	label = new QLabel( "<span style=\"font-size:16pt;\">Account Card</span>" );
-//	layout.addWidget( label, 1, Qt::AlignHCenter | Qt::AlignTop );
+	smallFont.setPointSize( 12 );
+	medFont.setPointSize( 16 );
+	accountNumberFont.setPointSize( 16 );
 
+	accountNumber.setFont( accountNumberFont );
 	layout.addWidget( &accountNumber, 1, Qt::AlignHCenter );
 
+	accountHolder.setFont( medFont );
 	layout.addWidget( &accountHolder, 1, Qt::AlignHCenter );
 
-	label = new QLabel( "<span style=\"font-size:12pt;\">Expiration Date</span>" );
+	label = new QLabel( "Expiration Date" );
+	label->setFont( smallFont );
 	vboxExpirationDate.addWidget( label, 1, Qt::AlignHCenter );
+	expirationDate.setFont( smallFont );
 	vboxExpirationDate.addWidget( &expirationDate, 1, Qt::AlignHCenter );
 	vWidgetExpirationDate.setLayout( &vboxExpirationDate );
 
-	label = new QLabel( "<span style=\"font-size:12pt;\">Issuer</span>" );
+	label = new QLabel( "Issuer" );
+	label->setFont( smallFont );
 	vboxAccountIssuer.addWidget( label, 1, Qt::AlignHCenter );
+	accountIssuer.setFont( smallFont );
 	vboxAccountIssuer.addWidget( &accountIssuer, 1, Qt::AlignHCenter );
 	vWidgetAccountIssuer.setLayout( &vboxAccountIssuer );
 
@@ -86,27 +93,21 @@ void AccountCard::showData() {
 	/* Account Number */
 	tmpStr = card->accountNumber;
 	if( card->type == MagCard::CARD_AMEX ) {
-		tmpStr.insert( 10, '\t' );
-		tmpStr.insert( 4, '\t' );
+		tmpStr.insert( 10, ' ' );
+		tmpStr.insert( 4, ' ' );
 	} else {
-		tmpStr.insert( 12, '\t' );
-		tmpStr.insert( 8, '\t' );
-		tmpStr.insert( 4, '\t' );
+		tmpStr.insert( 12, ' ' );
+		tmpStr.insert( 8, ' ' );
+		tmpStr.insert( 4, ' ' );
 	}
-
-
-	tmpStr.prepend( "<span style=\"font-size:16pt;\"><br>\n" );
-	tmpStr.append( "</span>" );
 
 	accountNumber.setText( tmpStr );
 
 	if( !card->accountHolder.isEmpty() )
-		tmpStr = QString( "<span style=\"font-size:12pt;\">%1</span>" ).arg( card->accountHolder );
+		accountHolder.setText( card->accountHolder );
 	else 
-		tmpStr.clear();
+		accountHolder.clear();
 
-	accountHolder.setText( tmpStr );
-	
 	/* Expiration Date */
 	tmpStr = card->expirationDate.toString( "MMM dd, yyyy" );
 	if( card->expirationDate < QDate::currentDate() ) {
@@ -114,8 +115,8 @@ void AccountCard::showData() {
 		tmpStr.append( "</font>" );
 	}
 
-	expirationDate.setText( QString( "<span style=\"font-size:12pt;\">%1</span>" ).arg( tmpStr ) );
+	expirationDate.setText( tmpStr );
 
 	/* Account Issuer */
-	accountIssuer.setText( QString( "<span style=\"font-size:12pt;\">%1</span>" ).arg( card->accountIssuer ) );
+	accountIssuer.setText( card->accountIssuer );
 }
