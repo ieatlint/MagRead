@@ -60,12 +60,12 @@ MagRead::MagRead(QWidget *parent) : QMainWindow(parent) {
 }
 
 void MagRead::notice( QString msg, int timeout, mboxStatus status ) {
-	QMessageBox *mbox = new QMessageBox;
 	qDebug() << status << timeout << msg;
 
-	mbox->setText( msg );
 
 	if( status == CRITICAL ) {
+		QMessageBox *mbox = new QMessageBox;
+		mbox->setText( msg );
 		mbox->setIcon( QMessageBox::Critical );
 		mbox->setStandardButtons( QMessageBox::Abort | QMessageBox::Ignore );
 		int retval = mbox->exec();
@@ -79,6 +79,8 @@ void MagRead::notice( QString msg, int timeout, mboxStatus status ) {
 		infoBox.information( 0, msg, timeout );
 		infoBox.show();
 #else
+		QMessageBox *mbox = new QMessageBox;
+		mbox->setText( msg );
 		if( status == INFORMATION )
 			mbox->setIcon( QMessageBox::Information );
 		else
@@ -103,8 +105,8 @@ void MagRead::cardRead( const MagCard _card ) {
 		aamvaPage();
 	} else if( card.swipeValid ) {
 		miscPage();
-	} else if( partialRead ) {
-		notice( "Show data from a partial read; may be incomplete/invalid", 750, WARNING );
+	} else if( partialRead && !card.charStream.isEmpty() ) {
+		notice( "Showing data from a partial read; may be incomplete/invalid", 750, WARNING );
 		miscPage( true );
 	} else {
 		notice( "Swipe Failed! Please Retry", 750, WARNING );
@@ -189,7 +191,6 @@ void MagRead::captureStop() {
 
 void MagRead::togglePartialRead( bool _partialRead ) {
 	partialRead = _partialRead;
-	notice( "Test critical message", 0, CRITICAL );
 }
 
 /* Credit Page */
@@ -231,7 +232,8 @@ void MagRead::aamvaPage() {
 
 /* Misc Page */
 void MagRead::miscPage( bool partial ) {
-	notice( "Misc Card Page", 750 );
+	if( !partial )
+		notice( "Misc Card Page", 750 );
 
 	onMainPage = false;
 
