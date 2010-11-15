@@ -8,9 +8,7 @@ AccountCard::AccountCard( MagCard *_card ) {
 
 	smallFont.setPointSize( 12 );
 	medFont.setPointSize( 16 );
-	accountNumberFont.setPointSize( 16 );
 
-	accountNumber.setFont( accountNumberFont );
 	layout.addWidget( &accountNumber, 1, Qt::AlignHCenter );
 
 	accountHolder.setFont( medFont );
@@ -39,7 +37,7 @@ AccountCard::AccountCard( MagCard *_card ) {
 	layout.addLayout( &vFlexBox );
 
 	//Setup the auto-reorientation
-	orientation = PORTRAIT;
+	orientation = UNSET;
 	reorient();
 	installEventFilter( this );
 	
@@ -57,6 +55,9 @@ void AccountCard::reorient() {
 		//landscape
 		if( orientation != LANDSCAPE ) {
 			qDebug() << "Landscape Mode";
+			accountNumberFont.setPointSize( 18 );
+			accountNumber.setFont( accountNumberFont );
+
 			layout.removeItem( layout.itemAt( 2 ) );
 			hFlexBox.setParent( 0 );
 			layout.addLayout( &hFlexBox );
@@ -66,6 +67,9 @@ void AccountCard::reorient() {
 		//portrait
 		if( orientation != PORTRAIT ) {
 			qDebug() << "Portrait Mode";
+			accountNumberFont.setPointSize( 12 );
+			accountNumber.setFont( accountNumberFont );
+
 			layout.removeItem( layout.itemAt( 2 ) );
 			vFlexBox.setParent( 0 );
 			layout.addLayout( &vFlexBox );

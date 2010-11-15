@@ -21,6 +21,7 @@ class AccountCard : public QWidget {
 		void reorient();
 
 		enum {
+			UNSET,
 			LANDSCAPE,
 			PORTRAIT
 		} orientation;
