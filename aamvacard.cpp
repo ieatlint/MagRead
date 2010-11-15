@@ -4,42 +4,55 @@
 
 AAMVACard::AAMVACard( MagCard *_card ) {
 	QLabel *label;
-	setLayout( &layout );
+
+	layout = new QVBoxLayout;
+	setLayout( layout );
 
 	smallFont.setPointSize( 12 );
 	medFont.setPointSize( 16 );
 
-	aamvaIssuerName.setFont( medFont );
-	layout.addWidget( &aamvaIssuerName, 1, Qt::AlignHCenter );
+	aamvaIssuerName = new QLabel;
+	aamvaIssuerName->setFont( medFont );
+	layout->addWidget( aamvaIssuerName, 1, Qt::AlignHCenter );
 
-	accountNumber.setFont( medFont );
-	layout.addWidget( &accountNumber, 1, Qt::AlignHCenter );
+	accountNumber = new QLabel;
+	accountNumber->setFont( medFont );
+	layout->addWidget( accountNumber, 1, Qt::AlignHCenter );
 
-	aamvaAge.setFont( smallFont );
-	layout.addWidget( &aamvaAge, 1, Qt::AlignHCenter );
+	aamvaAge = new QLabel;
+	aamvaAge->setFont( smallFont );
+	layout->addWidget( aamvaAge, 1, Qt::AlignHCenter );
 
 	label = new QLabel( "Expiration Date" );
 	label->setFont( smallFont );
-	vboxExpirationDate.addWidget( label, 1, Qt::AlignHCenter );
-	expirationDate.setFont( smallFont );
-	vboxExpirationDate.addWidget( &expirationDate, 1, Qt::AlignHCenter );
-	vWidgetExpirationDate.setLayout( &vboxExpirationDate );
+	vboxExpirationDate = new QVBoxLayout;
+	vboxExpirationDate->addWidget( label, 1, Qt::AlignHCenter );
+	expirationDate = new QLabel;
+	expirationDate->setFont( smallFont );
+	vboxExpirationDate->addWidget( expirationDate, 1, Qt::AlignHCenter );
+	vWidgetExpirationDate = new QWidget;
+	vWidgetExpirationDate->setLayout( vboxExpirationDate );
 
 
 	label = new QLabel( "Date of Birth" );
 	label->setFont( smallFont );
-	vboxaamvaBirthday.addWidget( label, 1, Qt::AlignHCenter );
-	aamvaBirthday.setFont( smallFont );
-	vboxaamvaBirthday.addWidget( &aamvaBirthday, 1, Qt::AlignHCenter );
-	vWidgetaamvaBirthday.setLayout( &vboxaamvaBirthday );
+	vboxaamvaBirthday = new QVBoxLayout;
+	vboxaamvaBirthday->addWidget( label, 1, Qt::AlignHCenter );
+	aamvaBirthday = new QLabel;
+	aamvaBirthday->setFont( smallFont );
+	vboxaamvaBirthday->addWidget( aamvaBirthday, 1, Qt::AlignHCenter );
+	vWidgetaamvaBirthday = new QWidget;
+	vWidgetaamvaBirthday->setLayout( vboxaamvaBirthday );
 
-	vFlexBox.addWidget( &vWidgetExpirationDate );
-	vFlexBox.addWidget( &vWidgetaamvaBirthday );
+	vFlexBox = new QVBoxLayout;
+	vFlexBox->addWidget( vWidgetExpirationDate );
+	vFlexBox->addWidget( vWidgetaamvaBirthday );
 
-	hFlexBox.addWidget( &vWidgetExpirationDate );
-	hFlexBox.addWidget( &vWidgetaamvaBirthday );
+	hFlexBox = new QHBoxLayout;
+	hFlexBox->addWidget( vWidgetExpirationDate );
+	hFlexBox->addWidget( vWidgetaamvaBirthday );
 
-	layout.addLayout( &vFlexBox );
+	layout->addLayout( vFlexBox );
 
 	//Setup the auto-reorientation
 	orientation = PORTRAIT;
@@ -60,18 +73,18 @@ void AAMVACard::reorient() {
 		//landscape
 		if( orientation != LANDSCAPE ) {
 			qDebug() << "Landscape Mode";
-			layout.removeItem( layout.itemAt( 3 ) );
-			hFlexBox.setParent( 0 );
-			layout.addLayout( &hFlexBox );
+			layout->removeItem( layout->itemAt( 3 ) );
+			hFlexBox->setParent( 0 );
+			layout->addLayout( hFlexBox );
 			orientation = LANDSCAPE;
 		}
 	} else {
 		//portrait
 		if( orientation != PORTRAIT ) {
 			qDebug() << "Portrait Mode";
-			layout.removeItem( layout.itemAt( 3 ) );
-			vFlexBox.setParent( 0 );
-			layout.addLayout( &vFlexBox );
+			layout->removeItem( layout->itemAt( 3 ) );
+			vFlexBox->setParent( 0 );
+			layout->addLayout( vFlexBox );
 			orientation = PORTRAIT;
 		}
 	}
@@ -93,9 +106,9 @@ void AAMVACard::setCard( MagCard *_card ) {
 void AAMVACard::showData() {
 	QString tmpStr;
 
-	aamvaIssuerName.setText( card->aamvaIssuerName );
+	aamvaIssuerName->setText( card->aamvaIssuerName );
 
-	accountNumber.setText( card->accountNumber );
+	accountNumber->setText( card->accountNumber );
 
 	tmpStr = QString( "Age %1" ).arg( card->aamvaAge );
 	if( card->aamvaAge < 18 ) {
@@ -105,14 +118,14 @@ void AAMVACard::showData() {
 		tmpStr.prepend( "<font color=\"yellow\">" );
 		tmpStr.append( "</font>" );
 	}
-	aamvaAge.setText( tmpStr );
+	aamvaAge->setText( tmpStr );
 
 	tmpStr = card->expirationDate.toString( "MMM dd, yyyy" );
 	if( card->expirationDate < QDate::currentDate() ) {
 		tmpStr.prepend( "<font color=\"red\">" );
 		tmpStr.append( "</font>" );
 	}
-	expirationDate.setText( tmpStr );
+	expirationDate->setText( tmpStr );
 
-	aamvaBirthday.setText( card->aamvaBirthday.toString( "MMM dd, yyyy" ) );
+	aamvaBirthday->setText( card->aamvaBirthday.toString( "MMM dd, yyyy" ) );
 }

@@ -26,25 +26,25 @@ class AAMVACard : public QWidget {
 
 		MagCard *card;
 
-		QVBoxLayout layout;
+		QVBoxLayout *layout;
 
-		QLabel aamvaIssuerName;
-		QLabel accountNumber;
-		QLabel aamvaAge;
+		QLabel *aamvaIssuerName;
+		QLabel *accountNumber;
+		QLabel *aamvaAge;
 
-		QWidget vFlexWidget;
-		QVBoxLayout vFlexBox;
+		QWidget *vFlexWidget;
+		QVBoxLayout *vFlexBox;
 
-		QWidget hFlexWidget;
-		QHBoxLayout hFlexBox;
+		QWidget *hFlexWidget;
+		QHBoxLayout *hFlexBox;
 
-		QLabel expirationDate;
-		QVBoxLayout vboxExpirationDate;
-		QWidget vWidgetExpirationDate;
+		QLabel *expirationDate;
+		QVBoxLayout *vboxExpirationDate;
+		QWidget *vWidgetExpirationDate;
 
-		QLabel aamvaBirthday;
-		QVBoxLayout vboxaamvaBirthday;
-		QWidget vWidgetaamvaBirthday;
+		QLabel *aamvaBirthday;
+		QVBoxLayout *vboxaamvaBirthday;
+		QWidget *vWidgetaamvaBirthday;
 
 		QFont smallFont;
 		QFont medFont;
