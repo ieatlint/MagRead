@@ -36,10 +36,13 @@ MagRead::MagRead(QWidget *parent) : QMainWindow(parent) {
 
 	qRegisterMetaType<MagCard>( "MagCard" );
 
+	//Set the auto-rotation for Maemo5
 #ifdef Q_WS_MAEMO_5
 	setAttribute(Qt::WA_Maemo5AutoOrientation, true);
 #endif
 
+
+	// Start/stop/back selections
 #ifdef Q_OS_SYMBIAN
 	backSoftKey = new QAction( "Start", this );
 	backSoftKey->setSoftKeyRole( QAction::PositiveSoftKey );
@@ -56,6 +59,31 @@ MagRead::MagRead(QWidget *parent) : QMainWindow(parent) {
 
 	setCentralWidget( mainWidget );
 #endif
+
+	//Option and Exit selections
+
+#ifndef Q_OS_SYMBIAN
+	settingsAction = new QAction( "&Settings", this );
+
+	aboutAction = new QAction( "&About", this );
+	connect( aboutAction, SIGNAL( triggered() ), this, SLOT( aboutDialogue() ) );
+
+	exitAction = new QAction( "E&xit", this );
+	connect( exitAction, SIGNAL( triggered() ), this, SLOT( close() ) );
+#endif
+
+#ifdef Q_WS_MAEMO_5
+	menuBar()->addAction( settingsAction );
+	menuBar()->addAction( aboutAction );
+	menuBar()->addAction( exitAction );
+#elif !defined( Q_OS_SYMBIAN )
+	QMenu *fileMenu = menuBar()->addMenu( "&File" );
+
+	fileMenu->addAction( settingsAction );
+	fileMenu->addAction( aboutAction );
+	fileMenu->addAction( exitAction );
+#endif
+
 	mainPage();
 }
 
@@ -131,6 +159,17 @@ void MagRead::mainPage() {
 	onMainPage = true;
 
 #ifdef Q_OS_SYMBIAN
+	QHBoxLayout *optionsBox = new QHBoxLayout;
+
+	QPushButton *settingsBtn = new QPushButton( "Settings" );
+	optionsBox->addWidget( settingsBtn );
+
+	QPushButton *aboutBtn = new QPushButton( "About" );
+	optionsBox->addWidget( aboutBtn );
+	connect( aboutBtn, SIGNAL( clicked() ), this, SLOT( aboutDialogue() ) );
+
+	layout->addLayout( optionsBox );
+
 	setCentralWidget( widget );
 #else
 	if( mainLayout->count() > 1 ) {
@@ -139,6 +178,15 @@ void MagRead::mainPage() {
 	}
 	mainLayout->insertWidget( 0, widget, 1 );
 #endif
+
+}
+
+void MagRead::aboutDialogue() {
+	QMessageBox *mbox = new QMessageBox;
+
+	mbox->setText( "MagRead v" QUOTE( APP_VERSION ) "<br>\nwritten by Jeffrey Malone &lt;<a href=\"mailto:ieatlint@tehnterweb.com\">ieatlint@tehinterweb.com</a>&gt;<br>\nMore information can be found at <a href=\"http://blog.tehinterweb.com/\">http://blog.tehinterweb.com</a>" );
+
+	mbox->exec();
 }
 
 void MagRead::toggleRead() {

@@ -13,6 +13,9 @@ maemo5 {
 TARGET = MagRead
 TEMPLATE = app
 
+VERSION = 0.1.3
+DEFINES += APP_VERSION=$$VERSION
+
 SOURCES += main.cpp\
         magread.cpp \
     carddetect.cpp \
@@ -36,4 +39,5 @@ symbian {
     TARGET.CAPABILITY += "UserEnvironment"
     TARGET.EPOCSTACKSIZE = 0x14000
     TARGET.EPOCHEAPSIZE = 0x020000 0x800000
+    ICON = "magread.svg"
 }

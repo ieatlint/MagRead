@@ -20,6 +20,9 @@
 #ifndef MAGREAD_H
 #define MAGREAD_H
 
+#define QUOTE_(x) #x
+#define QUOTE(x) QUOTE_(x)
+
 #include <QtGui/QMainWindow>
 #include <QGridLayout>
 #include <QWidget>
@@ -39,6 +42,8 @@
 
 #include <QMessageBox>
 #include <QTimer>
+
+#include <QMenuBar>
 
 #include "carddetect.h"
 #include "magcard.h"
@@ -78,7 +83,12 @@ class MagRead : public QMainWindow {
 		QWidget *mainWidget;
 		QVBoxLayout *mainLayout;
 		QPushButton *mainBackBtn;
+
+		QAction *settingsAction;
+		QAction *aboutAction;
+		QAction *exitAction;
 #endif
+
 		enum mboxStatus {
 			INFORMATION,
 			WARNING,
@@ -90,6 +100,7 @@ class MagRead : public QMainWindow {
 		void notice( QString msg, int timeout = 500, mboxStatus status = INFORMATION );
 		void toggleRead();
 		void togglePartialRead( bool _partialRead );
+		void aboutDialogue();
 };
 
 #endif // MAGREAD_H
