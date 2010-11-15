@@ -6,6 +6,10 @@
 
 QT       += core gui multimedia
 
+maemo5 {
+	QT += maemo5
+}
+
 TARGET = MagRead
 TEMPLATE = app
 
