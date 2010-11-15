@@ -8,6 +8,8 @@ MagDecode::MagDecode(QObject *parent) : QIODevice(parent) {
 	captureAudio = true;
 
 	silenceThreshold = 300;
+
+	normOffsetFound = false;
 	normOffset = 0;
 }
 
@@ -27,13 +29,14 @@ qint64 MagDecode::writeData( const char *data, qint64 dataLen ) {
 	int blockLen = dataLen / sizeof( qint16 );
 
 	/* Roughly estimates what true 0 amplitude is */
-	if( normOffset == 0 ) {
+	if( !normOffsetFound ) {
 		for( int i = 0; i < blockLen; i++ ) {
 			normOffset += pcmDataBlock[ i ];
 		}
 
 		normOffset /= blockLen;
-
+		normOffsetFound = true;
+		qDebug() << "Norm offset is" << normOffset;
 		return dataLen;
 	}
 
@@ -76,7 +79,7 @@ void MagDecode::processSwipe() {
 	ms_peaks_find_walk( ms );
 	ms_peaks_filter_group( ms );
 
-	ms_save( ms, "/home/ieatlint/code/SWipe/tests/x" );
+//	ms_save( ms, "/tmp/swipe" );
 
 	ms_decode_peaks( ms  );
 

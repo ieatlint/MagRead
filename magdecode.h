@@ -26,6 +26,7 @@ class MagDecode : public QIODevice
 
 		int silenceThreshold;
 		int normOffset;
+		bool normOffsetFound;
 
 		QVarLengthArray<qint16> pcmData;
 
