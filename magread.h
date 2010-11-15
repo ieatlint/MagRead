@@ -33,6 +33,13 @@
 #include <QMetaType>
 #include <QAudioInput>
 
+#ifdef Q_WS_MAEMO_5
+#include <QMaemo5InformationBox>
+#endif
+
+#include <QMessageBox>
+#include <QTimer>
+
 #include "carddetect.h"
 #include "magcard.h"
 #include "magdecode.h"
@@ -72,10 +79,15 @@ class MagRead : public QMainWindow {
 		QVBoxLayout *mainLayout;
 		QPushButton *mainBackBtn;
 #endif
+		enum mboxStatus {
+			INFORMATION,
+			WARNING,
+			CRITICAL
+		};
 
 	private slots:
 		void cardRead( const MagCard _card );
-		void notice( QString msg );
+		void notice( QString msg, int timeout = 500, mboxStatus status = INFORMATION );
 		void toggleRead();
 		void togglePartialRead( bool _partialRead );
 };

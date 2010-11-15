@@ -22,8 +22,6 @@
 #include <QDebug>
 
 MagRead::MagRead(QWidget *parent) : QMainWindow(parent) {
-	qDebug() << "reach";
-
 	captureAudio = false;
 	partialRead = false;
 
@@ -37,6 +35,10 @@ MagRead::MagRead(QWidget *parent) : QMainWindow(parent) {
 	magDec = NULL;
 
 	qRegisterMetaType<MagCard>( "MagCard" );
+
+#ifdef Q_WS_MAEMO_5
+	setAttribute(Qt::WA_Maemo5AutoOrientation, true);
+#endif
 
 #ifdef Q_OS_SYMBIAN
 	backSoftKey = new QAction( "Start", this );
@@ -57,8 +59,38 @@ MagRead::MagRead(QWidget *parent) : QMainWindow(parent) {
 	mainPage();
 }
 
-void MagRead::notice( QString msg ) {
-	qDebug() << "NOTICE" << msg;
+void MagRead::notice( QString msg, int timeout, mboxStatus status ) {
+	QMessageBox *mbox = new QMessageBox;
+	qDebug() << status << timeout << msg;
+
+	mbox->setText( msg );
+
+	if( status == CRITICAL ) {
+		mbox->setIcon( QMessageBox::Critical );
+		mbox->setStandardButtons( QMessageBox::Abort | QMessageBox::Ignore );
+		int retval = mbox->exec();
+
+		if( retval == QMessageBox::Abort )
+			destroy();
+	} else {
+#ifdef Q_WS_MAEMO_5
+		QMaemo5InformationBox infoBox;
+
+		infoBox.information( 0, msg, timeout );
+		infoBox.show();
+#else
+		if( status == INFORMATION )
+			mbox->setIcon( QMessageBox::Information );
+		else
+			mbox->setIcon( QMessageBox::Warning );
+
+		mbox->setStandardButtons( QMessageBox::NoButton );
+		mbox->show();
+		QTimer::singleShot( timeout, mbox, SLOT( hide() ) );
+#endif
+	}
+
+
 }
 
 void MagRead::cardRead( const MagCard _card ) {
@@ -72,10 +104,10 @@ void MagRead::cardRead( const MagCard _card ) {
 	} else if( card.swipeValid ) {
 		miscPage();
 	} else if( partialRead ) {
-		notice( "Show data from a partial read; may be incomplete/invalid" );
+		notice( "Show data from a partial read; may be incomplete/invalid", 750, WARNING );
 		miscPage( true );
 	} else {
-		notice( "Swipe Failed! Please Retry" );
+		notice( "Swipe Failed! Please Retry", 750, WARNING );
 	}
 }
 
@@ -157,11 +189,12 @@ void MagRead::captureStop() {
 
 void MagRead::togglePartialRead( bool _partialRead ) {
 	partialRead = _partialRead;
+	notice( "Test critical message", 0, CRITICAL );
 }
 
 /* Credit Page */
 void MagRead::creditPage() {
-	notice( "Successfully Read Credit Card" );
+	notice( "Successfully Read Credit Card", 750 );
 
 	onMainPage = false;
 
@@ -179,7 +212,7 @@ void MagRead::creditPage() {
 }
 
 void MagRead::aamvaPage() {
-	notice( "Successfully Read AAMVA Card" );
+	notice( "Successfully Read AAMVA Card", 750 );
 
 	onMainPage = false;
 
@@ -198,7 +231,7 @@ void MagRead::aamvaPage() {
 
 /* Misc Page */
 void MagRead::miscPage( bool partial ) {
-	notice( "Misc Card Page" );
+	notice( "Misc Card Page", 750 );
 
 	onMainPage = false;
 
