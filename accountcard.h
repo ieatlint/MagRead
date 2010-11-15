@@ -28,25 +28,25 @@ class AccountCard : public QWidget {
 
 		MagCard *card;
 
-		QVBoxLayout layout;
+		QVBoxLayout *layout;
 
-		QLabel accountNumber;
-		QLabel accountHolder;
+		QLabel *accountNumber;
+		QLabel *accountHolder;
 		
-		QWidget vFlexWidget;
-		QVBoxLayout vFlexBox;
+		QWidget *vFlexWidget;
+		QVBoxLayout *vFlexBox;
 
-		QWidget vWidgetAccountIssuer;
-		QWidget vWidgetExpirationDate;
+		QWidget *vWidgetAccountIssuer;
+		QWidget *vWidgetExpirationDate;
 
-		QWidget hFlexWidget;
-		QHBoxLayout hFlexBox;
+		QWidget *hFlexWidget;
+		QHBoxLayout *hFlexBox;
 
-		QVBoxLayout vboxExpirationDate;
-		QLabel expirationDate;
+		QVBoxLayout *vboxExpirationDate;
+		QLabel *expirationDate;
 
-		QVBoxLayout vboxAccountIssuer;
-		QLabel accountIssuer;
+		QVBoxLayout *vboxAccountIssuer;
+		QLabel *accountIssuer;
 
 		QFont smallFont;
 		QFont medFont;

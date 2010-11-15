@@ -4,37 +4,49 @@
 
 AccountCard::AccountCard( MagCard *_card ) {
 	QLabel *label;
-	setLayout( &layout );
+
+	layout = new QVBoxLayout;
+	setLayout( layout );
 
 	smallFont.setPointSize( 12 );
 	medFont.setPointSize( 16 );
 
-	layout.addWidget( &accountNumber, 1, Qt::AlignHCenter );
+	accountNumber = new QLabel;
+	layout->addWidget( accountNumber, 1, Qt::AlignHCenter );
 
-	accountHolder.setFont( medFont );
-	layout.addWidget( &accountHolder, 1, Qt::AlignHCenter );
+	accountHolder = new QLabel;
+	accountHolder->setFont( medFont );
+	layout->addWidget( accountHolder, 1, Qt::AlignHCenter );
 
 	label = new QLabel( "Expiration Date" );
 	label->setFont( smallFont );
-	vboxExpirationDate.addWidget( label, 1, Qt::AlignHCenter );
-	expirationDate.setFont( smallFont );
-	vboxExpirationDate.addWidget( &expirationDate, 1, Qt::AlignHCenter );
-	vWidgetExpirationDate.setLayout( &vboxExpirationDate );
+	vboxExpirationDate = new QVBoxLayout;
+	vboxExpirationDate->addWidget( label, 1, Qt::AlignHCenter );
+	expirationDate = new QLabel;
+	expirationDate->setFont( smallFont );
+	vboxExpirationDate->addWidget( expirationDate, 1, Qt::AlignHCenter );
+	vWidgetExpirationDate = new QWidget;
+	vWidgetExpirationDate->setLayout( vboxExpirationDate );
 
 	label = new QLabel( "Issuer" );
 	label->setFont( smallFont );
-	vboxAccountIssuer.addWidget( label, 1, Qt::AlignHCenter );
-	accountIssuer.setFont( smallFont );
-	vboxAccountIssuer.addWidget( &accountIssuer, 1, Qt::AlignHCenter );
-	vWidgetAccountIssuer.setLayout( &vboxAccountIssuer );
+	vboxAccountIssuer = new QVBoxLayout;
+	vboxAccountIssuer->addWidget( label, 1, Qt::AlignHCenter );
+	accountIssuer = new QLabel;
+	accountIssuer->setFont( smallFont );
+	vboxAccountIssuer->addWidget( accountIssuer, 1, Qt::AlignHCenter );
+	vWidgetAccountIssuer = new QWidget;
+	vWidgetAccountIssuer->setLayout( vboxAccountIssuer );
 
-	vFlexBox.addWidget( &vWidgetExpirationDate );
-	vFlexBox.addWidget( &vWidgetAccountIssuer );
+	vFlexBox = new QVBoxLayout;
+	vFlexBox->addWidget( vWidgetExpirationDate );
+	vFlexBox->addWidget( vWidgetAccountIssuer );
 
-	hFlexBox.addWidget( &vWidgetExpirationDate );
-	hFlexBox.addWidget( &vWidgetAccountIssuer );
+	hFlexBox = new QHBoxLayout;
+	hFlexBox->addWidget( vWidgetExpirationDate );
+	hFlexBox->addWidget( vWidgetAccountIssuer );
 
-	layout.addLayout( &vFlexBox );
+	layout->addLayout( vFlexBox );
 
 	//Setup the auto-reorientation
 	orientation = UNSET;
@@ -56,11 +68,11 @@ void AccountCard::reorient() {
 		if( orientation != LANDSCAPE ) {
 			qDebug() << "Landscape Mode";
 			accountNumberFont.setPointSize( 18 );
-			accountNumber.setFont( accountNumberFont );
+			accountNumber->setFont( accountNumberFont );
 
-			layout.removeItem( layout.itemAt( 2 ) );
-			hFlexBox.setParent( 0 );
-			layout.addLayout( &hFlexBox );
+			layout->removeItem( layout->itemAt( 2 ) );
+			hFlexBox->setParent( 0 );
+			layout->addLayout( hFlexBox );
 			orientation = LANDSCAPE;
 		}
 	} else {
@@ -68,11 +80,11 @@ void AccountCard::reorient() {
 		if( orientation != PORTRAIT ) {
 			qDebug() << "Portrait Mode";
 			accountNumberFont.setPointSize( 12 );
-			accountNumber.setFont( accountNumberFont );
+			accountNumber->setFont( accountNumberFont );
 
-			layout.removeItem( layout.itemAt( 2 ) );
-			vFlexBox.setParent( 0 );
-			layout.addLayout( &vFlexBox );
+			layout->removeItem( layout->itemAt( 2 ) );
+			vFlexBox->setParent( 0 );
+			layout->addLayout( vFlexBox );
 			orientation = PORTRAIT;
 		}
 	}
@@ -105,12 +117,12 @@ void AccountCard::showData() {
 		tmpStr.insert( 4, ' ' );
 	}
 
-	accountNumber.setText( tmpStr );
+	accountNumber->setText( tmpStr );
 
 	if( !card->accountHolder.isEmpty() )
-		accountHolder.setText( card->accountHolder );
+		accountHolder->setText( card->accountHolder );
 	else 
-		accountHolder.clear();
+		accountHolder->clear();
 
 	/* Expiration Date */
 	tmpStr = card->expirationDate.toString( "MMM dd, yyyy" );
@@ -119,8 +131,8 @@ void AccountCard::showData() {
 		tmpStr.append( "</font>" );
 	}
 
-	expirationDate.setText( tmpStr );
+	expirationDate->setText( tmpStr );
 
 	/* Account Issuer */
-	accountIssuer.setText( card->accountIssuer );
+	accountIssuer->setText( card->accountIssuer );
 }
