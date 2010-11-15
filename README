@@ -6,7 +6,7 @@ Requirements:
  - Qt 4.6 or later (including Qt Multimedia plugin)
 
 It may run on any device meeting the above requirements, but has only been
-tested on a Linux desktop machine and a Nokia N8.
+tested on a Linux desktop machine, a Nokia N8 and a Nokia N900.
 
 To build on the terminal, simply run:
 qmake && make
