@@ -7,6 +7,9 @@
 #include <QLabel>
 #include <QEvent>
 
+#include <QApplication>
+#include <QDesktopWidget>
+
 #include "magcard.h"
 
 class AAMVACard : public QWidget {

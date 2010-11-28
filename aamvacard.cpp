@@ -67,7 +67,8 @@ AAMVACard::AAMVACard( MagCard *_card ) {
 }
 
 void AAMVACard::reorient() {
-	QSize geometry = size();
+//	QSize geometry = size();
+	QRect geometry = QApplication::desktop()->screenGeometry();
 
 	if( geometry.width() > geometry.height() ) {
 		//landscape

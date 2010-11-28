@@ -8,8 +8,10 @@ AccountCard::AccountCard( MagCard *_card ) {
 	layout = new QVBoxLayout;
 	setLayout( layout );
 
-	smallFont.setPointSize( 12 );
-	medFont.setPointSize( 16 );
+	//smallFont.setPointSize( 12 );
+	//medFont.setPointSize( 16 );
+	smallFont.setPointSize( 32 );
+	medFont.setPointSize( 32 );
 
 	accountNumber = new QLabel;
 	layout->addWidget( accountNumber, 1, Qt::AlignHCenter );
@@ -53,7 +55,6 @@ AccountCard::AccountCard( MagCard *_card ) {
 	reorient();
 	installEventFilter( this );
 	
-	
 	if( _card ) {
 		card = _card;
 		showData();
@@ -61,13 +62,14 @@ AccountCard::AccountCard( MagCard *_card ) {
 }
 
 void AccountCard::reorient() {
-	QSize geometry = size();
+//	QSize geometry = size();
+	QRect geometry = QApplication::desktop()->screenGeometry();
 
 	if( geometry.width() > geometry.height() ) {
 		//landscape
 		if( orientation != LANDSCAPE ) {
 			qDebug() << "Landscape Mode";
-			accountNumberFont.setPointSize( 18 );
+			accountNumberFont.setPointSize( 48 );//18
 			accountNumber->setFont( accountNumberFont );
 
 			layout->removeItem( layout->itemAt( 2 ) );
@@ -79,7 +81,7 @@ void AccountCard::reorient() {
 		//portrait
 		if( orientation != PORTRAIT ) {
 			qDebug() << "Portrait Mode";
-			accountNumberFont.setPointSize( 12 );
+			accountNumberFont.setPointSize( 32 );//12
 			accountNumber->setFont( accountNumberFont );
 
 			layout->removeItem( layout->itemAt( 2 ) );
