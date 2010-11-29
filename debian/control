@@ -2,7 +2,7 @@ Source: magread
 Section: user/utilities
 Priority: extra
 Maintainer: Jeffrey Malone <ieatlint@tehinterweb.com>
-Build-Depends: debhelper (>= 5), libqt4-dev (>=4.6.1), libpulse-dev
+Build-Depends: debhelper (>= 5), libqt4-dev (>=4.6.1), libqt4-multimedia (>=4.6.1)
 Standards-Version: 3.7.3
 
 Package: magread
