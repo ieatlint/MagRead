@@ -63,7 +63,8 @@ MagRead::MagRead(QWidget *parent) : QMainWindow(parent) {
 	//Option and Exit selections
 
 #ifndef Q_OS_SYMBIAN
-	settingsAction = new QAction( "&Settings", this );
+//	Removed until settings functionality implemented
+//	settingsAction = new QAction( "&Settings", this );
 
 	aboutAction = new QAction( "&About", this );
 	connect( aboutAction, SIGNAL( triggered() ), this, SLOT( aboutDialogue() ) );
@@ -161,7 +162,8 @@ void MagRead::mainPage() {
 #ifdef Q_OS_SYMBIAN
 	QHBoxLayout *optionsBox = new QHBoxLayout;
 
-	QPushButton *settingsBtn = new QPushButton( "Settings" );
+//	Removed until settings functionality implemented
+//	QPushButton *settingsBtn = new QPushButton( "Settings" );
 	optionsBox->addWidget( settingsBtn );
 
 	QPushButton *aboutBtn = new QPushButton( "About" );
