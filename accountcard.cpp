@@ -8,16 +8,19 @@ AccountCard::AccountCard( MagCard *_card ) {
 	layout = new QVBoxLayout;
 	setLayout( layout );
 
-	//smallFont.setPointSize( 12 );
-	//medFont.setPointSize( 16 );
+#ifdef Q_WS_MAEMO_5
 	smallFont.setPointSize( 32 );
 	medFont.setPointSize( 32 );
+#else
+	smallFont.setPointSize( 12 );
+	medFont.setPointSize( 16 );
+#endif
 
 	accountNumber = new QLabel;
 	layout->addWidget( accountNumber, 1, Qt::AlignHCenter );
 
 	accountHolder = new QLabel;
-	accountHolder->setFont( medFont );
+	accountHolder->setFont( smallFont );
 	layout->addWidget( accountHolder, 1, Qt::AlignHCenter );
 
 	label = new QLabel( "Expiration Date" );
@@ -58,18 +61,26 @@ AccountCard::AccountCard( MagCard *_card ) {
 	if( _card ) {
 		card = _card;
 		showData();
-	}
+	};
 }
 
 void AccountCard::reorient() {
-//	QSize geometry = size();
+#ifdef Q_OS_SYMBIAN
+	// for some reason, this works only on symbian, and the else works on everything but symbian
 	QRect geometry = QApplication::desktop()->screenGeometry();
+#else
+	QSize geometry = size();
+#endif
 
 	if( geometry.width() > geometry.height() ) {
 		//landscape
 		if( orientation != LANDSCAPE ) {
 			qDebug() << "Landscape Mode";
-			accountNumberFont.setPointSize( 48 );//18
+#ifdef Q_WS_MAEMO_5
+			accountNumberFont.setPointSize( 48 );
+#else
+			accountNumberFont.setPointSize( 18 );
+#endif
 			accountNumber->setFont( accountNumberFont );
 
 			layout->removeItem( layout->itemAt( 2 ) );
@@ -81,7 +92,11 @@ void AccountCard::reorient() {
 		//portrait
 		if( orientation != PORTRAIT ) {
 			qDebug() << "Portrait Mode";
-			accountNumberFont.setPointSize( 32 );//12
+#ifdef Q_WS_MAEMO_5
+			accountNumberFont.setPointSize( 32 );
+#else
+			accountNumberFont.setPointSize( 12 );
+#endif
 			accountNumber->setFont( accountNumberFont );
 
 			layout->removeItem( layout->itemAt( 2 ) );

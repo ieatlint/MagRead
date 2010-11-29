@@ -8,8 +8,13 @@ AAMVACard::AAMVACard( MagCard *_card ) {
 	layout = new QVBoxLayout;
 	setLayout( layout );
 
+#ifdef Q_WS_MAEMO_5
+	smallFont.setPointSize( 32 );
+	medFont.setPointSize( 32 );
+#else
 	smallFont.setPointSize( 12 );
 	medFont.setPointSize( 16 );
+#endif
 
 	aamvaIssuerName = new QLabel;
 	aamvaIssuerName->setFont( medFont );
@@ -67,8 +72,8 @@ AAMVACard::AAMVACard( MagCard *_card ) {
 }
 
 void AAMVACard::reorient() {
-//	QSize geometry = size();
-	QRect geometry = QApplication::desktop()->screenGeometry();
+	QSize geometry = size();
+//	QRect geometry = QApplication::desktop()->screenGeometry();
 
 	if( geometry.width() > geometry.height() ) {
 		//landscape
