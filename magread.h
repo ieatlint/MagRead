@@ -68,6 +68,7 @@ class MagRead : public QMainWindow {
 		bool captureAudio;
 		bool partialRead;
 		bool onMainPage;
+		QFont font;
 
 		void mainPage();
 		void creditPage();

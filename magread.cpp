@@ -42,6 +42,12 @@ MagRead::MagRead(QWidget *parent) : QMainWindow(parent) {
 #endif
 
 
+#ifdef Q_WS_MAEMO_5
+	font.setPointSize( 32 );
+#else
+	font.setPointSize( 16 );
+#endif
+
 	// Start/stop/back selections
 #ifdef Q_OS_SYMBIAN
 	backSoftKey = new QAction( "Start", this );
@@ -74,13 +80,13 @@ MagRead::MagRead(QWidget *parent) : QMainWindow(parent) {
 #endif
 
 #ifdef Q_WS_MAEMO_5
-	menuBar()->addAction( settingsAction );
+//	menuBar()->addAction( settingsAction );
 	menuBar()->addAction( aboutAction );
 	menuBar()->addAction( exitAction );
 #elif !defined( Q_OS_SYMBIAN )
 	QMenu *fileMenu = menuBar()->addMenu( "&File" );
 
-	fileMenu->addAction( settingsAction );
+//	fileMenu->addAction( settingsAction );
 	fileMenu->addAction( aboutAction );
 	fileMenu->addAction( exitAction );
 #endif
@@ -150,7 +156,8 @@ void MagRead::mainPage() {
 	widget->setLayout( layout );
 
 	QLabel *label;
-	label = new QLabel( "<span style=\"font-size:18pt;\">MagRead</span>" );
+	label = new QLabel( "MagRead" );
+	label->setFont( font );
 	layout->addWidget( label, 1, Qt::AlignHCenter );
 
 	QCheckBox *cbox = new QCheckBox( "Show Partial Data" );
@@ -164,7 +171,7 @@ void MagRead::mainPage() {
 
 //	Removed until settings functionality implemented
 //	QPushButton *settingsBtn = new QPushButton( "Settings" );
-	optionsBox->addWidget( settingsBtn );
+//	optionsBox->addWidget( settingsBtn );
 
 	QPushButton *aboutBtn = new QPushButton( "About" );
 	optionsBox->addWidget( aboutBtn );
@@ -297,10 +304,11 @@ void MagRead::miscPage( bool partial ) {
 	}
 	tmpStr.replace( '|', "<font color=\"red\">|</font>" );
 
-	tmpStr.prepend( "<span style=\"font-size:18pt;\"><div align=\"center\">" );
-	tmpStr.append( "</div></span>" );
+	tmpStr.prepend( "<div align=\"center\">" );
+	tmpStr.append( "</div>" );
 
 	QLabel *label = new QLabel( tmpStr );
+	label->setFont( font );
 	scroll->setWidget( label );
 	scroll->setWidgetResizable( true );
 
