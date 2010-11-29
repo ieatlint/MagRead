@@ -16,7 +16,7 @@ Description: Reads magnetic stripe cards
  data and display it in a familiar format.
  *Requires that you have a hardware dongle, such as those provided by Square.*
  See http://blog.tehinterweb.com/ for more details
-XSBC-Bugtracker: https://garage.maemo.org/tracker/?group_id=1941
+XSBC-Bugtracker: https://github.com/ieatlint/MagRead/issues
 XB-Maemo-Icon-26:
  iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c
  6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0
