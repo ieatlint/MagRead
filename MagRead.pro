@@ -41,3 +41,13 @@ symbian {
     TARGET.EPOCHEAPSIZE = 0x020000 0x800000
     ICON = "magread.svg"
 }
+
+unix {
+	INSTALLS += target desktop icon48
+	target.path = /usr/bin/magread
+	desktop.path = /usr/share/applications/hildon
+	desktop.files += maemofiles/magread.desktop
+	icon48.path = /usr/share/icons/hicolor/48x48/hildon
+	icon48.files += maemofiles/magread.png
+}
+
