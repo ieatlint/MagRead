@@ -187,7 +187,7 @@ void CardDetect::aamvaCardCheck( QString expDate ) {
 	card->accountNumber.remove( iin );
 	if( card->miscData.length() > 8 )
 		card->accountNumber.append( card->miscData.mid( 8 ) );
-
+	
 	//format the id number if applicable
 	if( !issuerInfo.format.isEmpty() ) {
 		for( int i = 0; i < issuerInfo.format.length(); i++ ) {
@@ -199,10 +199,14 @@ void CardDetect::aamvaCardCheck( QString expDate ) {
 					card->accountNumber.replace( i, 2, letter );
 			} else if( issuerInfo.format.at( i ) != 'N' ) {
 				card->accountNumber.insert( i, issuerInfo.format.at( i ) );
+			} else if( card->accountNumber.at( i ) == '=' ) {
+				card->accountNumber.replace( i, 1, '0' );
 			}
 		}
 	}
 
+	card->accountNumber.remove( '=' );
+	
 	//set the birthday
 	QString bday = card->miscData.left( 8 );
 	if( bday.mid( 4, 2 ) > "12" ) { //some (Calif) violate AAMVA standard and switch the exp and bday month values
