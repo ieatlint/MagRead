@@ -138,8 +138,10 @@ void AccountCard::showData() {
 
 	if( !card->accountHolder.isEmpty() )
 		accountHolder->setText( card->accountHolder );
-	else 
+	else  {
+		accountHolder->hide();
 		accountHolder->clear();
+	}
 
 	/* Expiration Date */
 	tmpStr = card->expirationDate.toString( "MMM dd, yyyy" );
