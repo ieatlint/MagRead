@@ -1,0 +1,28 @@
+magread (0.1.3) stable; urgency=low
+
+  * Moved entirely over to Qt.  Now requires PR1.3 to successfully read cards.
+  * Added support for Symbian, Windows, OS X and Linux
+  * Supports auto-rotate functionality; redraws the screen to suite current
+    orientation.
+  * Fixed several bugs
+  * Added an about dialogue that includes a version number and a link to my
+    blog.
+  * Moved all issue tracking from the Maemo Garage to github because it is now
+    a multiplatform program.
+
+ -- Jeffrey Malone <ieatlint@tehinterweb.com>  Sun, 28 Nov 2010 22:56:47 -0700
+
+magread (0.1.1) unstable; urgency=low
+
+  * Fixed missing icon
+  * Rotated icon 180 degrees
+  * Fixed a leap year issue for calculating ages that could result in 1 day
+    age skew.
+
+ -- Jeffrey Malone <ieatlint@tehinterweb.com>  Sat,  6 Nov 2010 16:06:47 -0700
+
+magread (0.1.0) unstable; urgency=low
+
+  * Initial release
+
+ -- Jeffrey Malone <ieatlint@tehinterweb.com>  Thu, 04 Nov 2010 06:10:14 -0700
