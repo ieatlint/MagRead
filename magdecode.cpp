@@ -11,6 +11,8 @@ MagDecode::MagDecode(QObject *parent) : QIODevice(parent) {
 
 	normOffsetFound = false;
 	normOffset = 0;
+
+	timeOut = 0;
 }
 
 void MagDecode::start() {
@@ -25,6 +27,11 @@ qint64 MagDecode::writeData( const char *data, qint64 dataLen ) {
 	if( !captureAudio )
 		return dataLen;
 	
+	if( timeOut > 0 ) {
+		timeOut--;
+		return dataLen;
+	}
+
 	const qint16 *pcmDataBlock = reinterpret_cast<const qint16 *>( data );
 	int blockLen = dataLen / sizeof( qint16 );
 
@@ -67,6 +74,9 @@ qint64 MagDecode::writeData( const char *data, qint64 dataLen ) {
 
 void MagDecode::processSwipe() {
 	bool valid;
+
+	//Starting off with a simple one of a 10 block timeout
+	timeOut = 10;
 
 	//Normalize the audio based on calculated 0 level
 	for( int i = 0; i < pcmData.count(); i++ )

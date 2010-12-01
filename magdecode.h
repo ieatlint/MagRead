@@ -22,6 +22,7 @@ class MagDecode : public QIODevice
 		int silenceCount;
 		bool noiseDetected;
 		bool captureAudio;
+		int timeOut;
 		void processSwipe();
 
 		int silenceThreshold;
