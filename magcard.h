@@ -66,6 +66,13 @@ class MagCard {
 			swipeValid = false;
 		}
 
+		void clear() {
+			type = CARD_UNSET;
+			charStream.clear();
+			bitStream.clear();
+			accountNumber.clear();
+		}
+
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( MagCard::Types )
