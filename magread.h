@@ -88,7 +88,12 @@ class MagRead : public QMainWindow {
 		QAction *settingsAction;
 		QAction *aboutAction;
 		QAction *exitAction;
+		QAction *showDataAction;
 #endif
+		void addShowData();
+		void removeShowData();
+
+		QMenu *fileMenu;
 
 		enum mboxStatus {
 			INFORMATION,
@@ -102,6 +107,7 @@ class MagRead : public QMainWindow {
 		void toggleRead();
 		void togglePartialRead( bool _partialRead );
 		void aboutDialogue();
+		void showData();
 };
 
 #endif // MAGREAD_H

@@ -77,6 +77,9 @@ MagRead::MagRead(QWidget *parent) : QMainWindow(parent) {
 
 	exitAction = new QAction( "E&xit", this );
 	connect( exitAction, SIGNAL( triggered() ), this, SLOT( close() ) );
+
+	showDataAction = new QAction( "Show &Data", this );
+	connect( showDataAction, SIGNAL( triggered() ), this, SLOT( showData() ) );
 #endif
 
 #ifdef Q_WS_MAEMO_5
@@ -84,7 +87,7 @@ MagRead::MagRead(QWidget *parent) : QMainWindow(parent) {
 	menuBar()->addAction( aboutAction );
 	menuBar()->addAction( exitAction );
 #elif !defined( Q_OS_SYMBIAN )
-	QMenu *fileMenu = menuBar()->addMenu( "&File" );
+	fileMenu = menuBar()->addMenu( "&File" );
 
 //	fileMenu->addAction( settingsAction );
 	fileMenu->addAction( aboutAction );
@@ -128,6 +131,12 @@ void MagRead::notice( QString msg, int timeout, mboxStatus status ) {
 	}
 
 
+}
+
+void MagRead::showData() {
+	if( !card.charStream.isEmpty() ) {
+		miscPage();
+	}
 }
 
 void MagRead::cardRead( const MagCard _card ) {
@@ -188,6 +197,8 @@ void MagRead::mainPage() {
 	mainLayout->insertWidget( 0, widget, 1 );
 #endif
 
+	removeShowData();
+
 }
 
 void MagRead::aboutDialogue() {
@@ -213,6 +224,7 @@ void MagRead::toggleRead() {
 		backStr = "Stop";
 		captureAudio = true;
 	} else {
+		card.clear();
 		backStr = "Start";
 		mainPage();
 	}
@@ -250,6 +262,26 @@ void MagRead::togglePartialRead( bool _partialRead ) {
 	partialRead = _partialRead;
 }
 
+void MagRead::addShowData() {
+#ifdef Q_WS_MAEMO_5
+	if( !menuBar()->actions().contains( showDataAction ) )
+		menuBar()->addAction( showDataAction );
+#elif !defined( Q_OS_SYMBIAN )
+	if( !fileMenu->actions().contains( showDataAction ) )
+		fileMenu->addAction( showDataAction );
+#endif
+}
+
+void MagRead::removeShowData() {
+#ifdef Q_WS_MAEMO_5
+	if( menuBar()->actions().contains( showDataAction ) )
+		menuBar()->removeAction( showDataAction );
+#elif !defined( Q_OS_SYMBIAN )
+	if( fileMenu->actions().contains( showDataAction ) )
+		fileMenu->removeAction( showDataAction );
+#endif
+}
+
 /* Credit Page */
 void MagRead::creditPage() {
 	notice( "Successfully Read Credit Card", 750 );
@@ -267,6 +299,9 @@ void MagRead::creditPage() {
 	}
 	mainLayout->insertWidget( 0, accountCard, 1 );
 #endif
+
+	addShowData();
+
 }
 
 void MagRead::aamvaPage() {
@@ -285,6 +320,8 @@ void MagRead::aamvaPage() {
 	}
 	mainLayout->insertWidget( 0, aamvaCard, 1 );
 #endif
+
+	addShowData();
 }
 
 /* Misc Page */
@@ -323,6 +360,8 @@ void MagRead::miscPage( bool partial ) {
 	}
 	mainLayout->insertWidget( 0, scroll, 1 );
 #endif
+	
+	removeShowData();
 
 }
 
