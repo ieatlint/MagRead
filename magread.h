@@ -72,6 +72,8 @@ class MagRead : public QMainWindow {
 		bool onMainPage;
 		QFont font;
 
+		QSettings *settings;
+
 		void mainPage();
 		void creditPage();
 		void aamvaPage();

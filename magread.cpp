@@ -36,6 +36,8 @@ MagRead::MagRead(QWidget *parent) : QMainWindow(parent) {
 
 	qRegisterMetaType<MagCard>( "MagCard" );
 
+	settings = new QSettings;
+
 	//Set the auto-rotation for Maemo5
 #ifdef Q_WS_MAEMO_5
 	setAttribute(Qt::WA_Maemo5AutoOrientation, true);
@@ -145,9 +147,16 @@ void MagRead::cardRead( const MagCard _card ) {
 	cardDetect.setCard( &card );
 
 	if( ( card.type & MagCard::CARD_CC || card.type == MagCard::CARD_AAA ) && card.accountValid ) {
-		creditPage();
+		if( settings->value( "formatCredit" ) == true )
+			creditPage();
+		else
+			miscPage();
+
 	} else if( card.type == MagCard::CARD_AAMVA ) {
-		aamvaPage();
+		if( settings->value( "formatAAMVA" ) == true )
+			aamvaPage();
+		else
+			miscPage();
 	} else if( card.swipeValid ) {
 		miscPage();
 	} else if( partialRead && !card.charStream.isEmpty() ) {

@@ -23,11 +23,12 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MagRead w;
     a.setApplicationName( "MagRead" );
     a.setApplicationVersion( QUOTE( APP_VERSION ) );
     a.setOrganizationDomain( "tehinterweb.com" );
     a.setOrganizationName( "lint" );
+
+    MagRead w;
 #if defined(Q_WS_S60)
     w.showMaximized();
 #else
