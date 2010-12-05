@@ -1,9 +1,13 @@
-magread (0.1.3-01) stable; urgency=low
+magread (0.1.5) stable; urgency=low
 
   * Fixed a bug (#1) in displaying driver licence/id numbers from some states
   * Fixed a formatting issue (#7) for bank cards read from track 2
   * Fixed a bug (#9) that could cause a bad loop of failed reads that could
     prevent the user from easily stopping the process.
+  * Create a settings page
+  * Allow user to turn on/off auto-rotation on Maemo
+  * Create setting for always formatting or not formatting AAMVA and bank
+    cards
 
  -- Jeffrey Malone <ieatlint@tehinterweb.com>  Wed,  1 Dec 2010 15:19:00 -0700
 
