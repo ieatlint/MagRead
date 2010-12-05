@@ -46,6 +46,7 @@ class SettingsPage : public QScrollArea {
 		QSlider *silenceSlider;
 
 	signals:
+		void autoReorientSig( bool );
 
 	private slots:
 		void formatCredit_checked( int state );

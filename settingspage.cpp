@@ -38,7 +38,7 @@ void SettingsPage::makeGeneralBox() {
 		formatAAMVA->setCheckState( Qt::Checked );
 	connect( formatAAMVA, SIGNAL( stateChanged( int ) ), this, SLOT( formatAAMVA_checked( int ) ) );
 
-#ifndef Q_OS_SYMBIAN
+#ifdef Q_WS_MAEMO_5
 	autoReorient = new QCheckBox( "Auto-reorient Screen" );//not symbian
 	generalLayout->addWidget( autoReorient );
 	if( settings->value( "autoReorient" ) == true )
@@ -85,7 +85,14 @@ void SettingsPage::autoReorient_checked( int state ) {
 	if( state == Qt::Checked )
 		settings->setValue( "autoReorient", true );
 	else
-		settings->setValue( "autoReorient", false );
+		settings->setValue( "autoReorient", false );	
+#ifdef Q_WS_MAEMO_5
+	if( settings->value( "autoReorient" ) == true ) {
+		emit autoReorientSig( true );
+	} else {
+		emit autoReorientSig( false );
+	}
+#endif
 }
 
 void SettingsPage::timeOutChanged( int value ) {

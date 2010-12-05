@@ -113,6 +113,7 @@ class MagRead : public QMainWindow {
 		void aboutDialogue();
 		void showData();
 		void settingsPage();
+		void autoReorient( bool enabled );
 };
 
 #endif // MAGREAD_H

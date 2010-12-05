@@ -40,7 +40,9 @@ MagRead::MagRead(QWidget *parent) : QMainWindow(parent) {
 
 	//Set the auto-rotation for Maemo5
 #ifdef Q_WS_MAEMO_5
-	setAttribute(Qt::WA_Maemo5AutoOrientation, true);
+	if( settings->value( "autoReorient" ) == true ) {
+		setAttribute( Qt::WA_Maemo5AutoOrientation, true );
+	}
 #endif
 
 
@@ -295,16 +297,17 @@ void MagRead::removeShowData() {
 void MagRead::settingsPage() {
 	onMainPage = false;
 
-	SettingsPage *settings = new SettingsPage;
+	SettingsPage *settingsWidget = new SettingsPage;
+	connect( settingsWidget, SIGNAL( autoReorientSig( bool ) ), this, SLOT( autoReorient( bool ) ) );
 
 #ifdef Q_OS_SYMBIAN
-	setCentralWidget( settings );
+	setCentralWidget( settingsWidget );
 #else
 	if( mainLayout->count() > 1 ) {
 		mainLayout->itemAt( 0 )->widget()->hide();
 		mainLayout->removeItem( mainLayout->itemAt( 0 ) );
 	}
-	mainLayout->insertWidget( 0, settings, 1 );
+	mainLayout->insertWidget( 0, settingsWidget, 1 );
 #endif
 
 #ifdef Q_OS_SYMBIAN
@@ -314,6 +317,12 @@ void MagRead::settingsPage() {
 #endif
 
 	removeShowData();
+}
+
+void MagRead::autoReorient( bool enabled ) {
+#ifdef Q_WS_MAEMO_5
+	setAttribute( Qt::WA_Maemo5AutoOrientation, enabled );
+#endif
 }
 
 /* Credit Page */
