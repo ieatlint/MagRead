@@ -70,7 +70,8 @@ MagRead::MagRead(QWidget *parent) : QMainWindow(parent) {
 
 #ifndef Q_OS_SYMBIAN
 //	Removed until settings functionality implemented
-//	settingsAction = new QAction( "&Settings", this );
+	settingsAction = new QAction( "&Settings", this );
+	connect( settingsAction, SIGNAL( triggered() ), this, SLOT( settingsPage() ) );
 
 	aboutAction = new QAction( "&About", this );
 	connect( aboutAction, SIGNAL( triggered() ), this, SLOT( aboutDialogue() ) );
@@ -83,13 +84,13 @@ MagRead::MagRead(QWidget *parent) : QMainWindow(parent) {
 #endif
 
 #ifdef Q_WS_MAEMO_5
-//	menuBar()->addAction( settingsAction );
+	menuBar()->addAction( settingsAction );
 	menuBar()->addAction( aboutAction );
 	menuBar()->addAction( exitAction );
 #elif !defined( Q_OS_SYMBIAN )
 	fileMenu = menuBar()->addMenu( "&File" );
 
-//	fileMenu->addAction( settingsAction );
+	fileMenu->addAction( settingsAction );
 	fileMenu->addAction( aboutAction );
 	fileMenu->addAction( exitAction );
 #endif
@@ -280,6 +281,30 @@ void MagRead::removeShowData() {
 	if( fileMenu->actions().contains( showDataAction ) )
 		fileMenu->removeAction( showDataAction );
 #endif
+}
+
+void MagRead::settingsPage() {
+	onMainPage = false;
+
+	SettingsPage *settings = new SettingsPage;
+
+#ifdef Q_OS_SYMBIAN
+	setCentralWidget( settings );
+#else
+	if( mainLayout->count() > 1 ) {
+		mainLayout->itemAt( 0 )->widget()->hide();
+		mainLayout->removeItem( mainLayout->itemAt( 0 ) );
+	}
+	mainLayout->insertWidget( 0, settings, 1 );
+#endif
+
+#ifdef Q_OS_SYMBIAN
+	backSoftKey->setText( "Back" );
+#else
+	mainBackBtn->setText( "Back" );
+#endif
+
+	removeShowData();
 }
 
 /* Credit Page */

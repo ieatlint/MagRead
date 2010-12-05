@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     mslib.c \
     llist.c \
     accountcard.cpp \
-    aamvacard.cpp
+    aamvacard.cpp \
+    settingspage.cpp
 
 HEADERS  += magread.h \
     carddetect.h \
@@ -32,7 +33,8 @@ HEADERS  += magread.h \
     llist.h \
     magcard.h \
     accountcard.h \
-    aamvacard.h
+    aamvacard.h \
+    settingspage.h
 
 symbian {
     TARGET.UID3 = 0xe2c961e1
@@ -50,4 +52,3 @@ unix {
 	icon48.path = /usr/share/icons/hicolor/48x48/hildon
 	icon48.files += maemofiles/magread.png
 }
-

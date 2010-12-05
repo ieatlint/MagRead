@@ -52,6 +52,8 @@
 #include "accountcard.h"
 #include "aamvacard.h"
 
+#include "settingspage.h"
+
 
 class MagRead : public QMainWindow {
 	Q_OBJECT
@@ -108,6 +110,7 @@ class MagRead : public QMainWindow {
 		void togglePartialRead( bool _partialRead );
 		void aboutDialogue();
 		void showData();
+		void settingsPage();
 };
 
 #endif // MAGREAD_H
