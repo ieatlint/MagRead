@@ -35,7 +35,7 @@ void SettingsPage::makeGeneralBox() {
 	formatAAMVA = new QCheckBox( "Format AAMVA Cards" );
 	generalLayout->addWidget( formatAAMVA );
 	if( settings->value( "formatAAMVA" ) == true )
-		formatCredit->setCheckState( Qt::Checked );
+		formatAAMVA->setCheckState( Qt::Checked );
 	connect( formatAAMVA, SIGNAL( stateChanged( int ) ), this, SLOT( formatAAMVA_checked( int ) ) );
 
 #ifndef Q_OS_SYMBIAN
