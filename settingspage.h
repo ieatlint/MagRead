@@ -10,6 +10,7 @@
 #include <QComboBox>
 #include <QAudioDeviceInfo>
 #include <QSettings>
+#include <QPushButton>
 
 class SettingsPage : public QScrollArea {
 	Q_OBJECT
@@ -21,6 +22,7 @@ class SettingsPage : public QScrollArea {
 
 		QWidget *widget;
 		QVBoxLayout *layout;
+		QPushButton *resetButton;
 
 		/* General Settings */
 		void makeGeneralBox();
@@ -54,6 +56,8 @@ class SettingsPage : public QScrollArea {
 		void normChanged( int value );
 		void silenceChanged( int value );
 		void normChecked( int state );
+
+		void resetAll( bool updateGui = true );
 
 };
 

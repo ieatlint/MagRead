@@ -7,9 +7,15 @@ SettingsPage::SettingsPage(QObject *parent) {
 	widget->setLayout( layout );
 
 	settings = new QSettings;
+	if( !settings->contains( "formatCredit" ) )
+		resetAll( false );
 
 	makeGeneralBox();
 	makeAudioBox();
+
+	resetButton = new QPushButton( "Reset to defaults" );
+	layout->addWidget( resetButton );
+	connect( resetButton, SIGNAL( clicked() ), this, SLOT( resetAll() ) );
 
 	setWidget( widget );
 	setWidgetResizable( true );
@@ -102,20 +108,30 @@ void SettingsPage::makeAudioBox() {
 	audioLayout->addWidget( audioSource );
 	
 	normCBox = new QCheckBox( "Auto-Detect Normalzation" );
-	normCBox->setCheckState( Qt::Checked );
 	audioLayout->addWidget( normCBox );
 	connect( normCBox, SIGNAL( stateChanged( int ) ), this, SLOT( normChecked( int ) ) );
 
-	normLabel = new QLabel( "Normalization: Auto-Detect" );
+	normLabel = new QLabel;
 	audioLayout->addWidget( normLabel );
 
 	normSlider = new QSlider( Qt::Horizontal );
 	normSlider->setTickInterval( 10 );
 	normSlider->setRange( -500, 500 );
-	normSlider->setSliderPosition( 0 );
-	normSlider->setEnabled( false );
 	audioLayout->addWidget( normSlider );
 	connect( normSlider, SIGNAL( valueChanged( int ) ), this, SLOT( normChanged( int ) ) );
+
+	if( settings->contains( "norm" ) )
+		normSlider->setSliderPosition( settings->value( "norm" ).toInt() );
+	else
+		normSlider->setSliderPosition( 0 );
+	
+	if( !settings->contains( "normAuto" ) || settings->value( "normAuto" ) == true ) {
+		normCBox->setCheckState( Qt::Checked );
+		normSlider->setEnabled( false );
+		normLabel->setText( QString( "Normalization: Auto-Detect" ) );
+	} else {
+		normLabel->setText( QString( "Normalization: %1" ).arg( normSlider->value() ) );
+	}
 
 	silenceLabel = new QLabel( "Silence Theshold: 300" );
 	audioLayout->addWidget( silenceLabel );
@@ -127,6 +143,14 @@ void SettingsPage::makeAudioBox() {
 	audioLayout->addWidget( silenceSlider );
 	connect( silenceSlider, SIGNAL( valueChanged( int ) ), this, SLOT( silenceChanged( int ) ) );
 
+	if( settings->contains( "silenceThreshold" ) ) {
+		silenceSlider->setSliderPosition( settings->value( "silenceThreshold" ).toInt() );
+	} else {
+		silenceSlider->setSliderPosition( 300 );
+	}
+	
+	silenceLabel->setText( QString( "Silence Threshold: %1" ).arg( silenceSlider->value() ) );
+
 	audioBox->setLayout( audioLayout );
 
 	layout->addWidget( audioBox );
@@ -136,17 +160,46 @@ void SettingsPage::normChecked( int state ) {
 	if( state == Qt::Checked ) {
 		normSlider->setEnabled( false );
 		normLabel->setText( "Normalization: Auto-Detect" );
+		settings->setValue( "normAuto", true );
 	} else {
 		normSlider->setEnabled( true );
 		normLabel->setText( QString( "Normalization: %1" ).arg( normSlider->value() ) );
+		settings->setValue( "normAuto", false );
 	}
 }
 
 void SettingsPage::silenceChanged( int value ) {
 	silenceLabel->setText( QString( "Silence Threshold: %1" ).arg( value ) );
+	settings->setValue( "silenceThreshold", value );
 }
 
 void SettingsPage::normChanged( int value ) {
 	normLabel->setText( QString( "Normalization: %1" ).arg( value ) );
+	settings->setValue( "norm", value );
 }
 
+
+
+void SettingsPage::resetAll( bool updateGui ) {
+	settings->setValue( "formatCredit", true );
+	settings->setValue( "formatAAMVA", true );
+	settings->setValue( "autoReorient", true );
+	settings->setValue( "timeOut", 10 );
+
+	settings->setValue( "normAuto", true );
+	settings->setValue( "norm", 0 );
+	settings->setValue( "silenceThreshold", 300 );
+
+	if( updateGui ) {
+		formatCredit->setCheckState( Qt::Checked );
+		formatAAMVA->setCheckState( Qt::Checked );
+		autoReorient->setCheckState( Qt::Checked );
+		timeOutChanged( 10 );
+
+		normCBox->setCheckState( Qt::Checked );
+		normSlider->setSliderPosition( 0 );
+		normLabel->setText( "Normalization: Auto-Detect" );
+
+		silenceChanged( 300 );
+	}
+}
