@@ -45,14 +45,14 @@ void SettingsPage::makeGeneralBox() {
 		autoReorient->setCheckState( Qt::Checked );
 	connect( autoReorient, SIGNAL( stateChanged( int ) ), this, SLOT( autoReorient_checked( int ) ) );
 #endif
-	timeOutLabel = new QLabel( "Timeout: 10" );
+	timeOutLabel = new QLabel( "Swipe Timeout: 10" );
 	generalLayout->addWidget( timeOutLabel );
 
 	timeOutSlider = new QSlider( Qt::Horizontal );
 	timeOutSlider->setTickInterval( 1 );
 	timeOutSlider->setRange( 0, 100 );
 	if( settings->contains( "timeOut" ) ) {
-		timeOutLabel->setText( QString( "Timeout: %1" ).arg( settings->value( "timeOut" ).toInt() ) );
+		timeOutLabel->setText( QString( "Swipe Timeout: %1" ).arg( settings->value( "timeOut" ).toInt() ) );
 		timeOutSlider->setSliderPosition( settings->value( "timeOut" ).toInt() );
 	} else {
 		timeOutSlider->setSliderPosition( 10 );
@@ -96,7 +96,7 @@ void SettingsPage::autoReorient_checked( int state ) {
 }
 
 void SettingsPage::timeOutChanged( int value ) {
-	timeOutLabel->setText( QString( "Timeout: %1" ).arg( value ) );
+	timeOutLabel->setText( QString( "Swipe Timeout: %1" ).arg( value ) );
 	settings->setValue( "timeOut", value );
 }
 
@@ -109,7 +109,6 @@ void SettingsPage::makeAudioBox() {
 	audioSource = new QComboBox;
 	QList<QAudioDeviceInfo> inputDevices = QAudioDeviceInfo::availableDevices( QAudio::AudioInput );
 	for( int i = 0; i < inputDevices.size(); i++ ) {
-		//audioSource->addItem( inputDevices.at( i ).deviceName(), qVariantFromValue( inputDevices.at( i ) ) );
 		audioSource->addItem( inputDevices.at( i ).deviceName() );
 	}
 	audioLayout->addWidget( audioSource );
