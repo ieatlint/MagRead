@@ -18,6 +18,7 @@
     http://blog.tehinterweb.com
 */
 #include "settingspage.h"
+#include <QDebug>
 
 SettingsPage::SettingsPage() {
 	widget = new QWidget;
@@ -131,6 +132,7 @@ void SettingsPage::makeAudioBox() {
 		audioSource->addItem( inputDevices.at( i ).deviceName() );
 	}
 	audioLayout->addWidget( audioSource );
+	connect( audioSource, SIGNAL( currentIndexChanged( QString ) ), this, SLOT( audioDeviceChanged( QString ) ) );
 	
 	normCBox = new QCheckBox( "Auto-Detect Normalzation" );
 	audioLayout->addWidget( normCBox );
@@ -181,6 +183,10 @@ void SettingsPage::makeAudioBox() {
 	layout->addWidget( audioBox );
 }
 
+void SettingsPage::audioDeviceChanged( QString audioDevice ) {
+	settings->setValue( "audioDevice", audioDevice );
+}
+
 void SettingsPage::normChecked( int state ) {
 	if( state == Qt::Checked ) {
 		normSlider->setEnabled( false );
@@ -218,7 +224,9 @@ void SettingsPage::resetAll( bool updateGui ) {
 	if( updateGui ) {
 		formatCredit->setCheckState( Qt::Checked );
 		formatAAMVA->setCheckState( Qt::Checked );
+#ifdef Q_WS_MAEMO5
 		autoReorient->setCheckState( Qt::Checked );
+#endif
 		timeOutChanged( 10 );
 
 		normCBox->setCheckState( Qt::Checked );

@@ -72,6 +72,7 @@ class SettingsPage : public QScrollArea {
 		void formatAAMVA_checked( int state );
 		void autoReorient_checked( int state );
 
+		void audioDeviceChanged( QString audioDevice );
 		void timeOutChanged( int value );
 		void normChanged( int value );
 		void silenceChanged( int value );

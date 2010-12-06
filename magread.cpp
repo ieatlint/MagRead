@@ -259,7 +259,19 @@ void MagRead::captureStart() {
 	if( settings->value( "normAuto" ) == false )
 		magDec->setNorm( settings->value( "norm" ).toInt() );
 
-	audioInput = new QAudioInput( audioFormat, this );
+	audioInput = 0;
+
+	QList<QAudioDeviceInfo> inputDevices = QAudioDeviceInfo::availableDevices( QAudio::AudioInput );
+	for( int i = 0; i < inputDevices.size(); i++ ) {
+		if( inputDevices.at( i ).deviceName() == settings->value( "audioDevice" ) ) {
+			audioInput = new QAudioInput( inputDevices.at( i ), audioFormat, this );
+		}
+	}
+
+	if( audioInput == 0 )
+		audioInput = new QAudioInput( audioFormat, this );
+
+
 	magDec->start();
 	audioInput->start( magDec );
 }
