@@ -19,7 +19,7 @@
 */
 #include "settingspage.h"
 
-SettingsPage::SettingsPage(QObject *parent) {
+SettingsPage::SettingsPage() {
 	widget = new QWidget;
 
 	layout = new QVBoxLayout;

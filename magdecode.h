@@ -17,6 +17,9 @@ class MagDecode : public QIODevice
 		void stop();
 		qint64 writeData( const char *data, qint64 dataLen );
 		qint64 readData( char *data, qint64 len );
+
+		void setTimeOut( int _timeOut );
+		void setNorm( int _normOffset );
 	
 	private:
 		int silenceCount;

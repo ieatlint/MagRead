@@ -253,6 +253,12 @@ void MagRead::captureStart() {
 	connect( magDec, SIGNAL( cardRead( MagCard ) ), this, SLOT( cardRead( MagCard ) ) );
 	connect( magDec, SIGNAL( errorMsg( QString ) ), this, SLOT( notice( QString ) ) );
 
+	magDec->setThreshold( settings->value( "silenceThreshold" ).toInt() );
+	magDec->setTimeOut( settings->value( "timeOut" ).toInt() );
+
+	if( settings->value( "normAuto" ) == false )
+		magDec->setNorm( settings->value( "norm" ).toInt() );
+
 	audioInput = new QAudioInput( audioFormat, this );
 	magDec->start();
 	audioInput->start( magDec );
@@ -322,6 +328,8 @@ void MagRead::settingsPage() {
 void MagRead::autoReorient( bool enabled ) {
 #ifdef Q_WS_MAEMO_5
 	setAttribute( Qt::WA_Maemo5AutoOrientation, enabled );
+#else
+	Q_UNUSED( enabled );
 #endif
 }
 

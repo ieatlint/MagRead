@@ -34,7 +34,7 @@
 class SettingsPage : public QScrollArea {
 	Q_OBJECT
 	public:
-		explicit SettingsPage(QObject *parent = 0);
+		explicit SettingsPage();
 
 	private:
 		QSettings *settings;

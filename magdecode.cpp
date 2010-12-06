@@ -126,3 +126,11 @@ void MagDecode::setThreshold( int threshold ) {
 	silenceThreshold = threshold;
 }
 
+void MagDecode::setTimeOut( int _timeOut ) {
+	timeOut = _timeOut;
+}
+
+void MagDecode::setNorm( int _normOffset ) {
+	normOffsetFound = true;
+	normOffset = _normOffset;
+}
