@@ -8,6 +8,8 @@ magread (0.1.5) stable; urgency=low
   * Allow user to turn on/off auto-rotation on Maemo
   * Create setting for always formatting or not formatting AAMVA and bank
     cards
+  * Add support for setting normalization, silence and timeout variables
+  * Add support for selecting the input audio device
 
  -- Jeffrey Malone <ieatlint@tehinterweb.com>  Wed,  1 Dec 2010 15:19:00 -0700
 
