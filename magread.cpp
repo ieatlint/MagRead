@@ -257,6 +257,8 @@ void MagRead::captureStart() {
 
 	if( settings->value( "normAuto" ) == false )
 		magDec->setNorm( settings->value( "norm" ).toInt() );
+	
+	magDec->setAlgorithm( settings->value( "algorithm" ).toString() );
 
 	audioInput = 0;
 

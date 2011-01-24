@@ -20,17 +20,21 @@ class MagDecode : public QIODevice
 
 		void setTimeOut( int _timeOut );
 		void setNorm( int _normOffset );
+		void setAlgorithm( QString _algorithm );
 	
 	private:
 		int silenceCount;
 		bool noiseDetected;
 		bool captureAudio;
 		int timeOut;
+		int defaultTimeOut;
 		void processSwipe();
 
 		int silenceThreshold;
 		int normOffset;
 		bool normOffsetFound;
+
+		QString algorithm;
 
 		QVarLengthArray<qint16> pcmData;
 

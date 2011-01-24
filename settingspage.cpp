@@ -82,6 +82,22 @@ void SettingsPage::makeGeneralBox() {
 
 	generalLayout->addWidget( timeOutSlider );
 
+	decodeMethodLabel = new QLabel( "Decoding Algorithm" );
+	generalLayout->addWidget( decodeMethodLabel );
+
+	decodeMethodIntersect = new QRadioButton( "Instersection Algorithm", this );
+	connect( decodeMethodIntersect, SIGNAL( toggled( bool ) ), this, SLOT( decodeMethodChanged( bool ) ) );
+	generalLayout->addWidget( decodeMethodIntersect );
+
+	decodeMethodWalk = new QRadioButton( "Walking Algorithm", this );
+	connect( decodeMethodWalk, SIGNAL( toggled( bool ) ), this, SLOT( decodeMethodChanged( bool ) ) );
+	generalLayout->addWidget( decodeMethodWalk );
+
+	if( settings->value( "algorithm" ).toString() == "intersect" )
+		decodeMethodIntersect->setChecked( true );
+	else
+		decodeMethodWalk->setChecked( true );
+
 	generalBox->setLayout( generalLayout );
 
 	layout->addWidget( generalBox );
@@ -118,6 +134,14 @@ void SettingsPage::autoReorient_checked( int state ) {
 void SettingsPage::timeOutChanged( int value ) {
 	timeOutLabel->setText( QString( "Swipe Timeout: %1" ).arg( value ) );
 	settings->setValue( "timeOut", value );
+}
+
+void SettingsPage::decodeMethodChanged( bool checked ) {
+	Q_UNUSED( checked );
+	if( decodeMethodIntersect->isChecked() )
+		settings->setValue( "algorithm", "intersect" );
+	else
+		settings->setValue( "algorithm", "walk" );
 }
 
 void SettingsPage::makeAudioBox() {

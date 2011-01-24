@@ -30,6 +30,7 @@
 #include <QAudioDeviceInfo>
 #include <QSettings>
 #include <QPushButton>
+#include <QRadioButton>
 
 class SettingsPage : public QScrollArea {
 	Q_OBJECT
@@ -52,6 +53,9 @@ class SettingsPage : public QScrollArea {
 		QCheckBox *autoReorient;
 		QLabel *timeOutLabel;
 		QSlider *timeOutSlider;
+		QLabel *decodeMethodLabel;
+		QRadioButton *decodeMethodIntersect;
+		QRadioButton *decodeMethodWalk;
 
 		/* Audio Box */
 		void makeAudioBox();
@@ -74,6 +78,7 @@ class SettingsPage : public QScrollArea {
 
 		void audioDeviceChanged( QString audioDevice );
 		void timeOutChanged( int value );
+		void decodeMethodChanged( bool checked );
 		void normChanged( int value );
 		void silenceChanged( int value );
 		void normChecked( int state );
