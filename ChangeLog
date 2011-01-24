@@ -10,6 +10,7 @@ magread (0.1.5) stable; urgency=low
     cards
   * Add support for setting normalization, silence and timeout variables
   * Add support for selecting the input audio device
+  * Add support for choosing a decoding algorithm
 
  -- Jeffrey Malone <ieatlint@tehinterweb.com>  Wed,  1 Dec 2010 15:19:00 -0700
 
