@@ -164,7 +164,7 @@ void ms_peaks_filter_group( msData *ms ) {
 	LList *trav;
 	LListH *groupList;
 	
-	int pos;//indicates pos/neg (not position)
+	int pos;/* indicates pos/neg (not position) */
 
 	if( !ms || ms->peakList->len < 2 )
 		return;
@@ -345,7 +345,7 @@ int ms_decode_bits( msData *ms ) {
 	validSwipe = 0;
 
 	bitStream = strchr( ms->bitStream, '1' );
-	if( bitStream == NULL ) // if stream contains no 1s, it's bad, just quit
+	if( bitStream == NULL ) /* if stream contains no 1s, it's bad, just quit */
 		return 1;
 	
 	bitStreamLen = strlen( bitStream );
@@ -357,7 +357,7 @@ int ms_decode_bits( msData *ms ) {
 		curChar = _ms_decode_bits_char( bitStream + i, LRC, ms->dataType );
 		charStream[ len ] = curChar;
 		if( curChar == BAD_CHAR )
-			badChars++; // count the bad chars
+			badChars++; /* count the bad chars */
 	}
 	charStream[ len ] = '\0';
 
@@ -394,8 +394,8 @@ int ms_decode_bits( msData *ms ) {
 char _ms_decode_bits_char( char *bitStream, char *LRC, ms_dataType type ) {
 	int parity = 0, i;
 	char out;
-	int len; // char length not including parity
-	int offset; // offset to make it ASCII
+	int len; /* char length not including parity */
+	int offset; /* offset to make it ASCII */
 
 	if( type == ABA ) {
 		len = ABA_CHAR_LEN - 1;
@@ -406,16 +406,16 @@ char _ms_decode_bits_char( char *bitStream, char *LRC, ms_dataType type ) {
 	}
 
 	for( i = 0, out = 0; i < len; i++ ) {
-		out |= ( bitStream[ i ] - NUM_ASCII_OFFSET ) << i; // using OR to assign the bits into the char
+		out |= ( bitStream[ i ] - NUM_ASCII_OFFSET ) << i; /* using OR to assign the bits into the char */
 		if( bitStream[ i ] == '1' ) {
-			LRC[ i ] = !LRC[ i ]; // flip the bit in the LRC for all 1 bits in the char
-			parity++; // count the number of 1 bits for the parity bit
+			LRC[ i ] = !LRC[ i ]; /* flip the bit in the LRC for all 1 bits in the char */
+			parity++; /* count the number of 1 bits for the parity bit */
 		}
 	}
 	out += offset;
 
 	if( ( parity & 1 ) == ( bitStream[ len ] - NUM_ASCII_OFFSET ) )
-		out = BAD_CHAR; // return the error char if the calculated parity bit doesn't match the recorded one
+		out = BAD_CHAR; /* return the error char if the calculated parity bit doesn't match the recorded one */
 	
 	return out;
 }

@@ -46,7 +46,7 @@ void llist_remove_idx( LListH *list, int idx ) {
 		prev = trav;
 	}
 
-	if( trav != NULL ) {//if found
+	if( trav != NULL ) {/* if found */
 		if( prev != NULL ) {
 			prev->next = trav->next;
 		} else {

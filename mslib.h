@@ -40,7 +40,7 @@ extern "C" {
 
 #define IATA_SS		"1010001"
 #define IATA_ES		"1111100"
-#define MAX_IATA_LEN	83 // some reports say max len is 79, but AAMVA says 82 ...
+#define MAX_IATA_LEN	83 /* some reports say max len is 79, but AAMVA says 82 ... */
 #define IATA_CHAR_LEN	7
 #define IATA_ASCII_OFFSET 32
 
@@ -132,7 +132,7 @@ const char *ms_get_bitStream( msData *ms );
 const char *ms_get_charStream( msData *ms );
 
 /* Reverses a string in place */
-void ms_strrev( char *str );
+void strrev( char *str );
 
 
 
