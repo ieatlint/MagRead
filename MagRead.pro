@@ -13,7 +13,7 @@ maemo5 {
 TARGET = MagRead
 TEMPLATE = app
 
-VERSION = 0.1.3-01
+VERSION = 0.1.5
 DEFINES += APP_VERSION=$$VERSION
 
 SOURCES += main.cpp\
